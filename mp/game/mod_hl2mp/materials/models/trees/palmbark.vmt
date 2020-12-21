@@ -1,0 +1,6 @@
+"VertexLitGeneric" { 
+
+"$basetexture" "models/trees/palmbark" 
+
+"$surfaceprop" "wood"
+}

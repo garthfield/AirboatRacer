@@ -1,0 +1,6 @@
+"VertexLitGeneric" { 
+"$translucent" 1
+"$basetexture" "models/trees/palmfronds" 
+"$nocull" 1
+"$surfaceprop" "foliage"
+}
