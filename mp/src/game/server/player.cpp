@@ -4901,6 +4901,8 @@ void CBasePlayer::InitialSpawn( void )
 //-----------------------------------------------------------------------------
 void CBasePlayer::Spawn( void )
 {
+	Msg("player Spawn called\n");
+
 	// Needs to be done before weapons are given
 	if ( Hints() )
 	{

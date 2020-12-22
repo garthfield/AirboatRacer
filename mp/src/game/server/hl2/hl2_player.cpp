@@ -1108,6 +1108,7 @@ void CHL2_Player::PlayerRunCommand(CUserCmd *ucmd, IMoveHelper *moveHelper)
 //-----------------------------------------------------------------------------
 void CHL2_Player::Spawn(void)
 {
+	Msg("hl2_player Spawn called\n");
 
 #ifndef HL2MP
 #ifndef PORTAL
