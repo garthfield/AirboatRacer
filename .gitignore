@@ -26,8 +26,8 @@ ipch
 *.mak.vpc_crc
 *.xcodeproj/
 obj*/
-!devtools/*.mak
-!utils/smdlexp/smdlexp.mak
+!mp/src/devtools/*.mak
+!mp/src/utils/smdlexp/smdlexp.mak
 
 # Specific Source build products
 client.pdb
