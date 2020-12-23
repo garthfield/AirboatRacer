@@ -40,6 +40,9 @@
     <Filter Include="VPC Scripts">
       <UniqueIdentifier>{A40EE377-781A-C6B9-0C7C-B3BE118D248E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\AirboatRacer">
+      <UniqueIdentifier>{e1ff19ca-a854-4412-a5b2-4912888a0f0c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\lib\public\choreoobjects.lib">
@@ -3555,6 +3558,9 @@
     </ClCompile>
     <ClCompile Include="toolframework_server.cpp">
       <Filter>Tools Framework</Filter>
+    </ClCompile>
+    <ClCompile Include="ar_client.cpp">
+      <Filter>Source Files\AirboatRacer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
