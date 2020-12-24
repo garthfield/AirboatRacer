@@ -13,6 +13,9 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{BA03E055-4FA2-FCE3-8A1C-D348547D379C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\AirboatRacer">
+      <UniqueIdentifier>{77830412-E9F2-5574-D83E-8AC709D78B6F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\HL2 DLL">
       <UniqueIdentifier>{3C43D38A-46AF-2183-A5E5-44383B1D2652}</UniqueIdentifier>
     </Filter>
@@ -39,9 +42,6 @@
     </Filter>
     <Filter Include="VPC Scripts">
       <UniqueIdentifier>{A40EE377-781A-C6B9-0C7C-B3BE118D248E}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\AirboatRacer">
-      <UniqueIdentifier>{e1ff19ca-a854-4412-a5b2-4912888a0f0c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2944,6 +2944,9 @@
     <ClCompile Include="world.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="airboatracer\ar_client.cpp">
+      <Filter>Source Files\AirboatRacer</Filter>
+    </ClCompile>
     <ClCompile Include="hl2\ai_allymanager.cpp">
       <Filter>Source Files\HL2 DLL</Filter>
     </ClCompile>
@@ -3277,9 +3280,6 @@
     <ClCompile Include="hl2mp\hl2mp_bot_temp.cpp">
       <Filter>Source Files\HL2MP</Filter>
     </ClCompile>
-    <ClCompile Include="hl2mp\hl2mp_client.cpp">
-      <Filter>Source Files\HL2MP</Filter>
-    </ClCompile>
     <ClCompile Include="hl2mp\hl2mp_cvars.cpp">
       <Filter>Source Files\HL2MP</Filter>
     </ClCompile>
@@ -3558,9 +3558,6 @@
     </ClCompile>
     <ClCompile Include="toolframework_server.cpp">
       <Filter>Tools Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="ar_client.cpp">
-      <Filter>Source Files\AirboatRacer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
