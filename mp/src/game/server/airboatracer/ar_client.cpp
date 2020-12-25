@@ -42,6 +42,9 @@ void AR_CreateAirboat(CHL2MP_Player *pPlayer)
 		pJeep->KeyValue("vehiclescript", "scripts/vehicles/airboat.txt");
 		DispatchSpawn(pJeep);
 		pJeep->Activate();
+
+		// Put player inside airboat
+		pPlayer->GetInVehicle(pJeep->GetServerVehicle(), VEHICLE_ROLE_DRIVER);
 	}
 }
 
