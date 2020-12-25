@@ -302,6 +302,8 @@ public:
 	virtual void	Init( void );
 	virtual void	Shutdown( void );
 
+	virtual void    MP_PostSimulate();
+
 	const CViewSetup *GetPlayerViewSetup( ) const;
 
 	virtual void	StartPitchDrift( void );

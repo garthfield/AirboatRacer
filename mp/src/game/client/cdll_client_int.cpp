@@ -2173,6 +2173,9 @@ void OnRenderStart()
 
 	C_BaseAnimating::ThreadedBoneSetup();
 
+	if (engine->GetMaxClients() > 1)
+		view->MP_PostSimulate();
+
 	{
 		VPROF_("Client TempEnts", 0, VPROF_BUDGETGROUP_CLIENT_SIM, false, BUDGETFLAG_CLIENT);
 		// This creates things like temp entities.
