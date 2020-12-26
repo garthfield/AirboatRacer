@@ -1544,6 +1544,9 @@
     <ClInclude Include="world.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="airboatracer\ar_player.h">
+      <Filter>Source Files\AirboatRacer</Filter>
+    </ClInclude>
     <ClInclude Include="airboatracer\ar_startline.h">
       <Filter>Source Files\AirboatRacer</Filter>
     </ClInclude>
@@ -2951,6 +2954,9 @@
       <Filter>Source Files\AirboatRacer</Filter>
     </ClCompile>
     <ClCompile Include="airboatracer\ar_client.cpp">
+      <Filter>Source Files\AirboatRacer</Filter>
+    </ClCompile>
+    <ClCompile Include="airboatracer\ar_player.cpp">
       <Filter>Source Files\AirboatRacer</Filter>
     </ClCompile>
     <ClCompile Include="airboatracer\ar_powerup.cpp">
