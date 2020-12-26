@@ -15,4 +15,12 @@ public:
 
 };
 
+inline CAR_Player *ToARPlayer(CBaseEntity *pEntity)
+{
+	if (!pEntity || !pEntity->IsPlayer())
+		return NULL;
+
+	return dynamic_cast<CAR_Player*>(pEntity);
+}
+
 #endif //CAR_PLAYER_H

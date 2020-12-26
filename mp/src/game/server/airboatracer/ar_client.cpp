@@ -1,5 +1,6 @@
 #include "cbase.h"
-#include "hl2mp_player.h"
+//#include "hl2mp_player.h"
+#include "ar_player.h"
 #include "hl2mp_gamerules.h"
 #include "gamerules.h"
 #include "teamplay_gamerules.h"
@@ -48,7 +49,7 @@ void AR_CreateAirboat(CHL2MP_Player *pPlayer)
 	}
 }
 
-void FinishClientPutInServer(CHL2MP_Player *pPlayer)
+void FinishClientPutInServer(CAR_Player *pPlayer)
 {
 	Msg("FinishClientPutInServer called\n");
 
@@ -102,7 +103,8 @@ void ClientPutInServer(edict_t *pEdict, const char *playername)
 	Msg("ClientPutInServer called\n");
 
 	// Allocate a CBaseTFPlayer for pev, and call spawn
-	CHL2MP_Player *pPlayer = CHL2MP_Player::CreatePlayer("player", pEdict);
+	//CHL2MP_Player *pPlayer = CHL2MP_Player::CreatePlayer("player", pEdict);
+	CHL2MP_Player *pPlayer = CAR_Player::CreatePlayer("player", pEdict);
 	pPlayer->SetPlayerName(playername);
 }
 
@@ -114,7 +116,8 @@ void ClientActive(edict_t *pEdict, bool bLoadGame)
 	// Can't load games in CS!
 	Assert(!bLoadGame);
 
-	CHL2MP_Player *pPlayer = ToHL2MPPlayer(CBaseEntity::Instance(pEdict));
+	//CHL2MP_Player *pPlayer = ToHL2MPPlayer(CBaseEntity::Instance(pEdict));
+	CAR_Player *pPlayer = ToARPlayer(CBaseEntity::Instance(pEdict));
 	FinishClientPutInServer(pPlayer);
 }
 
