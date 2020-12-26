@@ -1,2 +1,12 @@
 @include "base.fgd"
 @include "halflife2.fgd"
+
+@SolidClass base(Targetname) = r_checkpoint : "Checkpoint entity"
+[
+	index(integer) : "Index" : 1 : "Index value"
+]
+
+@SolidClass base(Targetname) = r_startline : "Start line entity"
+[
+	lastCheck(integer) : "Last Checkpoint" : 0 : "The highest index value of all checkpoints."
+]

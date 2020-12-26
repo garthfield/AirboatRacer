@@ -1544,6 +1544,9 @@
     <ClInclude Include="world.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="airboatracer\ar_startline.h">
+      <Filter>Source Files\AirboatRacer</Filter>
+    </ClInclude>
     <ClInclude Include="hl2\ai_behavior_actbusy.h">
       <Filter>Source Files\HL2 DLL</Filter>
     </ClInclude>
@@ -2944,7 +2947,13 @@
     <ClCompile Include="world.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="airboatracer\ar_checkpoint.cpp">
+      <Filter>Source Files\AirboatRacer</Filter>
+    </ClCompile>
     <ClCompile Include="airboatracer\ar_client.cpp">
+      <Filter>Source Files\AirboatRacer</Filter>
+    </ClCompile>
+    <ClCompile Include="airboatracer\ar_startline.cpp">
       <Filter>Source Files\AirboatRacer</Filter>
     </ClCompile>
     <ClCompile Include="hl2\ai_allymanager.cpp">

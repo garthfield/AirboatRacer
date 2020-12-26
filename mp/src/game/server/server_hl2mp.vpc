@@ -27,6 +27,9 @@ $Project "Server (HL2MP)"
 		$Folder "AirboatRacer"
 		{
 			$File	"airboatracer\ar_client.cpp"
+			$File	"airboatracer\ar_checkpoint.cpp"
+			$File	"airboatracer\ar_startline.h"
+			$File	"airboatracer\ar_startline.cpp"
 		}
 
 		$File	"ai_relationship.cpp"
