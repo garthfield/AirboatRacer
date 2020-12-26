@@ -2953,6 +2953,9 @@
     <ClCompile Include="airboatracer\ar_client.cpp">
       <Filter>Source Files\AirboatRacer</Filter>
     </ClCompile>
+    <ClCompile Include="airboatracer\ar_powerup.cpp">
+      <Filter>Source Files\AirboatRacer</Filter>
+    </ClCompile>
     <ClCompile Include="airboatracer\ar_startline.cpp">
       <Filter>Source Files\AirboatRacer</Filter>
     </ClCompile>

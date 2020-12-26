@@ -10,3 +10,7 @@
 [
 	lastCheck(integer) : "Last Checkpoint" : 0 : "The highest index value of all checkpoints."
 ]
+
+@PointClass base(Targetname, Angles) studio("models/pickup/pickup.mdl") = race_powerup : "Gives player a random powerup."
+[
+]

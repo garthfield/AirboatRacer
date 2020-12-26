@@ -30,6 +30,7 @@ $Project "Server (HL2MP)"
 			$File	"airboatracer\ar_checkpoint.cpp"
 			$File	"airboatracer\ar_startline.h"
 			$File	"airboatracer\ar_startline.cpp"
+			$File	"airboatracer\ar_powerup.cpp"
 		}
 
 		$File	"ai_relationship.cpp"
