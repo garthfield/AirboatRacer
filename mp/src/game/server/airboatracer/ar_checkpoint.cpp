@@ -31,13 +31,12 @@ void CAR_CheckpointEntity::StartTouch(CBaseEntity *pOther)
 {
 	if (stricmp(pOther->GetClassname(), "player") == 0) {
 		DevMsg("CAR_CheckpointEntity::StartTouch() entity:%s\n", pOther->GetClassname());
-		DevMsg("Checkpoint %d player %d\n", m_iIndex, pOther->entindex());
 
-		CBaseEntity *pStartlineEntity = NULL;
-		CAR_StartlineEntity *pStartpoint = NULL;
-		if ((pStartlineEntity = gEntList.FindEntityByClassname(NULL, "r_startline")) != NULL) {
-			pStartpoint = dynamic_cast<CAR_StartlineEntity *>(pStartlineEntity);
-			pStartpoint->SetPlayerCheckpoint(pOther->entindex(), m_iIndex);
+		CAR_StartlineEntity *pStartlineEntity = NULL;
+		pStartlineEntity = (CAR_StartlineEntity*)gEntList.FindEntityByClassname(NULL, "r_startline");
+		if (pStartlineEntity != NULL) {
+			DevMsg("CAR_StartlineEntity created\n");
+			pStartlineEntity->SetPlayerCheckpoint(pOther->entindex(), m_iIndex);
 		}
 	}
 }
