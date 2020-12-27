@@ -12,7 +12,10 @@ public:
 	DECLARE_CLASS(CAR_Player, CHL2MP_Player);
 
 	virtual void Spawn(void);
+	virtual void CreateAirboat(void);
 
+private:
+	CBaseEntity *m_pAirboat;
 };
 
 inline CAR_Player *ToARPlayer(CBaseEntity *pEntity)

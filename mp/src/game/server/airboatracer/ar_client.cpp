@@ -1,5 +1,4 @@
 #include "cbase.h"
-//#include "hl2mp_player.h"
 #include "ar_player.h"
 #include "hl2mp_gamerules.h"
 #include "gamerules.h"
@@ -24,31 +23,6 @@ ConVar sv_motd_unload_on_dismissal("sv_motd_unload_on_dismissal", "0", 0, "If en
 extern CBaseEntity*	FindPickerEntityClass(CBasePlayer *pPlayer, char *classname);
 extern bool			g_fGameOver;
 
-void AR_CreateAirboat(CHL2MP_Player *pPlayer)
-{
-	Msg("CreateAirboat\n");
-
-	// Create an airboat in front of the player
-	Vector vecForward;
-	AngleVectors(pPlayer->EyeAngles(), &vecForward);
-	CBaseEntity *pJeep = (CBaseEntity*)CreateEntityByName("prop_vehicle_airboat");
-	if (pJeep) {
-		Vector vecOrigin = pPlayer->GetAbsOrigin() + vecForward * 256 + Vector(0, 0, 64);
-		QAngle vecAngles(0, pPlayer->GetAbsAngles().y - 90, 0);
-		pJeep->SetAbsOrigin(vecOrigin);
-		pJeep->SetAbsAngles(vecAngles);
-		pJeep->KeyValue("model", "models/airboat.mdl");
-		pJeep->KeyValue("solid", "6");
-		pJeep->KeyValue("targetname", "airboat");
-		pJeep->KeyValue("vehiclescript", "scripts/vehicles/airboat.txt");
-		DispatchSpawn(pJeep);
-		pJeep->Activate();
-
-		// Put player inside airboat
-		pPlayer->GetInVehicle(pJeep->GetServerVehicle(), VEHICLE_ROLE_DRIVER);
-	}
-}
-
 void FinishClientPutInServer(CAR_Player *pPlayer)
 {
 	Msg("FinishClientPutInServer called\n");
@@ -56,7 +30,7 @@ void FinishClientPutInServer(CAR_Player *pPlayer)
 	pPlayer->InitialSpawn();
 	pPlayer->Spawn();
 
-	AR_CreateAirboat(pPlayer);
+	pPlayer->CreateAirboat();
 
 	char sName[128];
 	Q_strncpy(sName, pPlayer->GetPlayerName(), sizeof(sName));
@@ -102,8 +76,6 @@ void ClientPutInServer(edict_t *pEdict, const char *playername)
 {
 	Msg("ClientPutInServer called\n");
 
-	// Allocate a CBaseTFPlayer for pev, and call spawn
-	//CHL2MP_Player *pPlayer = CHL2MP_Player::CreatePlayer("player", pEdict);
 	CHL2MP_Player *pPlayer = CAR_Player::CreatePlayer("player", pEdict);
 	pPlayer->SetPlayerName(playername);
 }
@@ -116,7 +88,6 @@ void ClientActive(edict_t *pEdict, bool bLoadGame)
 	// Can't load games in CS!
 	Assert(!bLoadGame);
 
-	//CHL2MP_Player *pPlayer = ToHL2MPPlayer(CBaseEntity::Instance(pEdict));
 	CAR_Player *pPlayer = ToARPlayer(CBaseEntity::Instance(pEdict));
 	FinishClientPutInServer(pPlayer);
 }
