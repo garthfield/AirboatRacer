@@ -23,6 +23,12 @@ $Project "Client (HL2MP)"
 {
 	$Folder	"Source Files"
 	{
+		$Folder	"AirboatRacer"
+		{
+			$File	"airboatracer\hud_airboatracer.cpp"
+			$File	"airboatracer\hud_airboatracer.h"
+		}
+
 		-$File	"$SRCDIR\game\shared\weapon_parse_default.cpp"
 
 		$File	"c_team_objectiveresource.cpp"

@@ -25,6 +25,9 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{BA03E055-4FA2-FCE3-8A1C-D348547D379C}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\AirboatRacer">
+      <UniqueIdentifier>{77830412-E9F2-5574-D83E-8AC709D78B6F}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Source Files\game_controls">
       <UniqueIdentifier>{1E7DB91A-DC0A-B17F-617D-4C4FB3FA7A3E}</UniqueIdentifier>
     </Filter>
@@ -1835,6 +1838,9 @@
     <ClInclude Include="viewpostprocess.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="airboatracer\hud_airboatracer.h">
+      <Filter>Source Files\AirboatRacer</Filter>
+    </ClInclude>
     <ClInclude Include="game_controls\basemodel_panel.h">
       <Filter>Source Files\game_controls</Filter>
     </ClInclude>
@@ -2985,6 +2991,9 @@
     </ClCompile>
     <ClCompile Include="WorldDimsProxy.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="airboatracer\hud_airboatracer.cpp">
+      <Filter>Source Files\AirboatRacer</Filter>
     </ClCompile>
     <ClCompile Include="game_controls\basemodel_panel.cpp">
       <Filter>Source Files\game_controls</Filter>
