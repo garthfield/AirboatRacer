@@ -1,5 +1,6 @@
 #include "cbase.h"
 #include "ar_player.h"
+#include "ar_startline.h"
 
 LINK_ENTITY_TO_CLASS(player, CAR_Player);
 
@@ -7,6 +8,11 @@ void CAR_Player::Spawn(void)
 {
 	Msg("CAR_Player Spawn called\n");
 	BaseClass::Spawn();
+
+	// Send initial lap message
+	char msg[10];
+	Q_snprintf(msg, sizeof(msg), "%d/%d", 1, ar_laps.GetInt());
+	SendHudLapMsg(msg);
 }
 
 void CAR_Player::CreateAirboat(void)
@@ -32,4 +38,13 @@ void CAR_Player::CreateAirboat(void)
 		// Put player inside airboat
 		GetInVehicle(m_pAirboat->GetServerVehicle(), VEHICLE_ROLE_DRIVER);
 	}
+}
+
+void CAR_Player::SendHudLapMsg(char *message)
+{
+	CSingleUserRecipientFilter filter((CBasePlayer *)this);
+	filter.MakeReliable();
+	UserMessageBegin(filter, "Lap");
+	WRITE_STRING(message);
+	MessageEnd();
 }

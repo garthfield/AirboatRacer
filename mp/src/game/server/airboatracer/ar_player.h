@@ -13,6 +13,7 @@ public:
 
 	virtual void Spawn(void);
 	virtual void CreateAirboat(void);
+	void SendHudLapMsg(char *msg);
 
 private:
 	CBaseEntity *m_pAirboat;
