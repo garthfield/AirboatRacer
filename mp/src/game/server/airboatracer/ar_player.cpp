@@ -82,15 +82,14 @@ void CAR_Player::ExecutePowerup()
 
 	QAngle angPushDir = pVehicle->GetAbsAngles();
 
-	// Jump Powerup
+	// Jump & Nitro Powerup
 	if (m_iPowerup == 1 || m_iPowerup == 2) {
-		if (m_iPowerup == 1) {
-			angPushDir.y += 90;
-			angPushDir.x -= 15;
-		}
-		// Nitro Powerup
-		else if (m_iPowerup == 2) {
-			angPushDir.y += 90;
+		// Nitro & Jump
+		angPushDir.y += 90;
+		
+		// Jump Powerup
+		if (m_iPowerup == 2) {
+			angPushDir.x -= 30;
 		}
 
 		// Calculate vectors to push to
