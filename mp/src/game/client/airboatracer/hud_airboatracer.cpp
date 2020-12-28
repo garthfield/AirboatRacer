@@ -32,6 +32,8 @@ CHudAirboatRacer::CHudAirboatRacer(const char *pElementName) : CHudElement(pElem
 	surface()->DrawSetTextureFile(m_nPowerup3, "sprites/hud/shockicon", true, true);
 
 	SetHiddenBits(HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT);
+
+	m_iPowerupType = 1;
 }
 
 void CHudAirboatRacer::Init(void) {

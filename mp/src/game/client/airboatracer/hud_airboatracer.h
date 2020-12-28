@@ -23,7 +23,7 @@ protected:
 	int m_nPowerup1; // Nitro
 	int m_nPowerup2; // Jump
 	int m_nPowerup3; // Shockwave
-	int m_iPowerupType = 1;
+	int m_iPowerupType;
 
 	CPanelAnimationVar(vgui::HFont, m_hNumberFont, "NumberFont", "HudNumbers");
 	CPanelAnimationVar(vgui::HFont, m_hTextFont, "TextFont", "Default");
