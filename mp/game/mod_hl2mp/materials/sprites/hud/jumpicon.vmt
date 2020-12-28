@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "sprites/hud/jumpicon"
+	"$vertexalpha" "1"
+	"$spritescale" "1"
+	"$ignorez" 1
+}

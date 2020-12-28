@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "sprites/hud/shockicon"
+	"$spritescale" "1"
+	"$vertexalpha" "1"
+	"$ignorez" 1
+}

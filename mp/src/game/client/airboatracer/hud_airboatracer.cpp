@@ -22,6 +22,15 @@ CHudAirboatRacer::CHudAirboatRacer(const char *pElementName) : CHudElement(pElem
 	SetVisible(false);
 	SetAlpha(255);
 
+	m_nPowerup1 = surface()->CreateNewTextureID();
+	surface()->DrawSetTextureFile(m_nPowerup1, "sprites/hud/nitroicon", true, true);
+
+	m_nPowerup2 = surface()->CreateNewTextureID();
+	surface()->DrawSetTextureFile(m_nPowerup2, "sprites/hud/jumpicon", true, true);
+
+	m_nPowerup3 = surface()->CreateNewTextureID();
+	surface()->DrawSetTextureFile(m_nPowerup3, "sprites/hud/shockicon", true, true);
+
 	SetHiddenBits(HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT);
 }
 
@@ -37,6 +46,11 @@ void CHudAirboatRacer::ApplySchemeSettings(IScheme *scheme)
 void CHudAirboatRacer::MsgFunc_Lap(bf_read &msg) {
 	msg.ReadString(m_szLapInfo, sizeof(m_szLapInfo));
 	Msg("Received Lap: %s\n", m_szLapInfo);
+}
+
+void CHudAirboatRacer::MsgFunc_Powerup(bf_read &msg) {
+	m_iPowerupType = msg.ReadByte();
+	Msg("Received Powerup Type: %d\n", m_iPowerupType);
 }
 
 void CHudAirboatRacer::OnThink()
@@ -59,6 +73,19 @@ void CHudAirboatRacer::Paint()
 {
 	SetPaintBorderEnabled(false);
 
+	if (m_iPowerupType) {
+		if (m_iPowerupType == 1) {
+			surface()->DrawSetTexture(m_nPowerup1);
+		}
+		else if (m_iPowerupType == 2) {
+			surface()->DrawSetTexture(m_nPowerup2);
+		}
+		else if (m_iPowerupType == 3) {
+			surface()->DrawSetTexture(m_nPowerup3);
+		}
+		surface()->DrawTexturedRect(icon_powerup_x, icon_powerup_y, icon_powerup_x + 64, icon_powerup_y + 64);
+	}
+
 	char sSpeed[10];
 	Q_snprintf(sSpeed, sizeof(sSpeed), "%d", m_iSpeed);
 
@@ -70,6 +97,10 @@ void CHudAirboatRacer::Paint()
 	wchar_t sLabelLap[256];
 	wchar_t sValueLap[256];
 
+	const char *pszLabelPowerup = "POWER-UP";
+	wchar_t sLabelPowerup[256];
+
+	g_pVGuiLocalize->ConvertANSIToUnicode(pszLabelPowerup, sLabelPowerup, sizeof(sLabelPowerup));
 
 	g_pVGuiLocalize->ConvertANSIToUnicode(pszLabelSpeed, sLabelSpeed, sizeof(sLabelSpeed));
 	g_pVGuiLocalize->ConvertANSIToUnicode(pszValueSpeed, sValueSpeed, sizeof(sValueSpeed));
@@ -100,4 +131,9 @@ void CHudAirboatRacer::Paint()
 	surface()->DrawSetTextFont(m_hNumberFont);
 	surface()->DrawSetTextPos(value_lap_x, value_lap_y);
 	surface()->DrawUnicodeString(sValueLap);
+
+	// Powerup Label
+	surface()->DrawSetTextFont(m_hTextFont);
+	surface()->DrawSetTextPos(label_powerup_x, label_powerup_y);
+	surface()->DrawUnicodeString(sLabelPowerup);
 }
