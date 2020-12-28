@@ -13,6 +13,7 @@ using namespace vgui;
 
 DECLARE_HUDELEMENT(CHudAirboatRacer);
 DECLARE_HUD_MESSAGE(CHudAirboatRacer, Lap);
+DECLARE_HUD_MESSAGE(CHudAirboatRacer, Powerup);
 
 CHudAirboatRacer::CHudAirboatRacer(const char *pElementName) : CHudElement(pElementName), BaseClass(NULL, "HudAirboatRacer")
 {
@@ -38,6 +39,7 @@ CHudAirboatRacer::CHudAirboatRacer(const char *pElementName) : CHudElement(pElem
 
 void CHudAirboatRacer::Init(void) {
 	HOOK_HUD_MESSAGE(CHudAirboatRacer, Lap);
+	HOOK_HUD_MESSAGE(CHudAirboatRacer, Powerup);
 }
 
 void CHudAirboatRacer::ApplySchemeSettings(IScheme *scheme)

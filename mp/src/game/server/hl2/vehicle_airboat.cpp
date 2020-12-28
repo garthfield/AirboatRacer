@@ -1362,7 +1362,8 @@ void CPropAirboat::StopLoopingSounds()
 void CPropAirboat::UpdateEngineSound( CSoundEnvelopeController &controller, float speedRatio )
 {
 	#define ENGINE_MIN_VOLUME	0.22
-	#define ENGINE_MAX_VOLUME	0.62
+	//#define ENGINE_MAX_VOLUME	0.62
+	#define ENGINE_MAX_VOLUME	0.36
 	#define	ENGINE_MIN_PITCH	80
 	#define	ENGINE_MAX_PITCH	140
 	#define ENGINE_DUCK_TIME	4.0
@@ -1396,7 +1397,8 @@ void CPropAirboat::UpdateEngineSound( CSoundEnvelopeController &controller, floa
 void CPropAirboat::UpdateFanSound( CSoundEnvelopeController &controller, float speedRatio )
 {
 	#define FAN_MIN_VOLUME	0.0
-	#define FAN_MAX_VOLUME	0.82
+	//#define FAN_MAX_VOLUME	0.82
+	#define FAN_MAX_VOLUME	0.46
 	#define FAN_DUCK_VOLUME	0.22
 	#define FAN_CHANGE_VOLUME_TIME	1.0		// seconds over which to change the volume
 	#define FAN_DUCK_TIME 2.0				// seconds over which to duck the fan sound

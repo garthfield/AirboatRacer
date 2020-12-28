@@ -1,4 +1,6 @@
 #include "cbase.h"
+#include "vehicle_base.h"
+#include "ar_player.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -47,6 +49,20 @@ void CAR_Powerup::StartTouch(CBaseEntity *pOther)
 {
 	if (stricmp(pOther->GetClassname(), "prop_vehicle_airboat") == 0) {
 		DevMsg("POWERUP TOUCH: %s\n", pOther->GetClassname());
+
+		CPropVehicleDriveable *pDrivable = dynamic_cast<CPropVehicleDriveable*>(pOther);
+		if (pDrivable) {
+			DevMsg("POWERUP TOUCH pDrivable\n");
+			CBaseEntity *pDriver = pDrivable->GetDriver();
+			if (pDriver) {
+				DevMsg("POWERUP TOUCH pDriver\n");
+				CAR_Player *pPlayer = dynamic_cast<CAR_Player*>(pDriver);
+				if (pPlayer) {
+					DevMsg("POWERUP TOUCH pPlayer\n");
+					//pPlayer->CreatePowerup();
+				}
+			}
+		}
 	}
 
 	BaseClass::StartTouch(pOther);

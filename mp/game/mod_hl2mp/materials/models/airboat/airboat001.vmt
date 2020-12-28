@@ -1,0 +1,33 @@
+"VertexLitGeneric"
+{
+	"$basetexture" "Models/Airboat/Airboat001"
+	"$bumpmap" "models/airboat/airboat001_normal"
+	
+	"$surfaceprop" "metal"
+ 	"$envmaptint" "[ .1 .1 .1]"
+	"$envmap" "env_cubemap"
+	"$basealphaenvmapmask" 1
+	
+	
+  "VertexLitGeneric_HDR_dx9"
+  {
+    "$envmaptint" "[.1 .1 .1]"
+    "$normalmapalphaenvmapmask" 1
+  }
+
+ "VertexLitGeneric_DX9"
+  {
+    "$envmaptint" "[.1 .1 .1]"
+  }
+
+	"$phong" 			"1"
+	"$phongexponent" 			"45"
+	"$phongboost"			"1.8"
+	"$phongfresnelranges"		"[1 1 1]"
+	"$phongalbedotint" 			"1"
+
+//vh9b2
+	"$rimlight"			"1"
+	"$rimlightexponent"			"30"
+	"$rimlightboost"			".8"
+}

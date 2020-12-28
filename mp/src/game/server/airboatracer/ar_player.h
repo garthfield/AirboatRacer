@@ -13,10 +13,15 @@ public:
 
 	virtual void Spawn(void);
 	virtual void CreateAirboat(void);
+	virtual void PreThink(void);
 	void SendHudLapMsg(char *msg);
+	void SendHudPowerupMsg(int iPowerup);
+	void CreatePowerup();
+	void ExecutePowerup(void);
 
 private:
 	CBaseEntity *m_pAirboat;
+	int m_iPowerup;
 };
 
 inline CAR_Player *ToARPlayer(CBaseEntity *pEntity)
