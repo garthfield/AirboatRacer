@@ -62,7 +62,7 @@ void CAR_Player::CreatePowerup()
 {
 	// Only allowed 1 pickup at a time
 	if (m_iPowerup == NULL) {
-		m_iPowerup = RandomInt(1, 3);
+		m_iPowerup = RandomInt(1, 2);
 		DevMsg("CREATED POWER UP: %d", m_iPowerup);
 		SendHudPowerupMsg(m_iPowerup);
 	}
@@ -101,29 +101,6 @@ void CAR_Player::ExecutePowerup()
 		float m_flPushSpeed = 1000;
 		pVehicle->ApplyAbsVelocityImpulse(m_flPushSpeed * vecAbsDir);
 	}
-	else if (m_iPowerup == 3) {
-
-		// Can't run multiple max speeds at the same time
-		/*if (m_StopwatchPowerupThree.IsRunning() == false) {
-			CPropVehicleDriveable *pDrivable = dynamic_cast<CPropVehicleDriveable *>(pVehicle);
-			CFourWheelVehiclePhysics *pPhysics = pDrivable->GetPhysics();
-			IPhysicsVehicleController *pPhysicsVehicle = pPhysics->GetVehicle();
-			vehicleparams_t &vehicleParams = pPhysicsVehicle->GetVehicleParamsForChange();
-
-			// Increase max speed of vehicle
-			m_fOriginalMaxSpeed = vehicleParams.engine.maxSpeed;
-			vehicleParams.engine.maxSpeed *= 2;
-
-			// Only let them use it for 10 seconds
-			m_StopwatchPowerupThree.Start(10);
-		}*/
-	}
-
-	// GEnable Gun
-	/*variant_t input;
-	input.SetBool(true);
-	pVehicle->AcceptInput("EnableGun", pPlayer, pPlayer, input, 0);*/
-
 
 	// Send message to HUD clearing powerup
 	SendHudPowerupMsg(0);

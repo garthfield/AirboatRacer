@@ -59,7 +59,7 @@ void CAR_Powerup::StartTouch(CBaseEntity *pOther)
 				CAR_Player *pPlayer = dynamic_cast<CAR_Player*>(pDriver);
 				if (pPlayer) {
 					DevMsg("POWERUP TOUCH pPlayer\n");
-					//pPlayer->CreatePowerup();
+					pPlayer->CreatePowerup();
 				}
 			}
 		}
