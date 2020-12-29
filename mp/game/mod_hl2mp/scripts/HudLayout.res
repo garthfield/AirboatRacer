@@ -5,7 +5,7 @@
         "fieldName"     "HudAirboatRacer"
         "xpos"  "16"
         "ypos"  "390"
-        "wide" "170"
+        "wide" "210"
         "tall" "72"
         "visible" "1"
         "enabled" "1"
@@ -26,9 +26,14 @@
         "value_speed_x" "50"
         "value_speed_y" "32"
 
-		"label_powerup_x" "115"
+        "label_powerup_x" "110"
         "label_powerup_y" "8"
-		"icon_powerup_x" "115"
-        "icon_powerup_y" "20"
+        "icon_powerup_x" "165"
+        "icon_powerup_y" "8"
+
+        "label_health_x" "110"
+        "label_health_y" "40"
+        "value_health_x" "155"
+        "value_health_y" "32"
     }
 }

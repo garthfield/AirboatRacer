@@ -65,6 +65,10 @@ void CHudAirboatRacer::OnThink()
 		return;
 	}
 
+	if (pPlayer) {
+		m_iHealth = MAX(pPlayer->GetHealth(), 0);
+	}
+
 	IClientVehicle *pVehicle = pPlayer->GetVehicle();
 	C_PropVehicleDriveable *pDrivable = dynamic_cast<C_PropVehicleDriveable*>(pVehicle);
 	m_iSpeed = pDrivable->GetSpeed();
@@ -104,6 +108,12 @@ void CHudAirboatRacer::Paint()
 	const char *pszLabelPowerup = "POWER-UP";
 	wchar_t sLabelPowerup[256];
 
+	char sHealth[10];
+	Q_snprintf(sHealth, sizeof(sHealth), "%d", m_iHealth);
+	const char *pszLabelHealth = "HEALTH", *pszValueHealth = sHealth;
+	wchar_t sLabelHealth[256];
+	wchar_t sValueHealth[256];
+
 	g_pVGuiLocalize->ConvertANSIToUnicode(pszLabelPowerup, sLabelPowerup, sizeof(sLabelPowerup));
 
 	g_pVGuiLocalize->ConvertANSIToUnicode(pszLabelSpeed, sLabelSpeed, sizeof(sLabelSpeed));
@@ -111,6 +121,9 @@ void CHudAirboatRacer::Paint()
 
 	g_pVGuiLocalize->ConvertANSIToUnicode(pszLabelLap, sLabelLap, sizeof(sLabelLap));
 	g_pVGuiLocalize->ConvertANSIToUnicode(m_szLapInfo, sValueLap, sizeof(sValueLap));
+
+	g_pVGuiLocalize->ConvertANSIToUnicode(pszLabelHealth, sLabelHealth, sizeof(sLabelHealth));
+	g_pVGuiLocalize->ConvertANSIToUnicode(pszValueHealth, sValueHealth, sizeof(sValueHealth));
 
 	// Set text colour
 	Color cColor = m_TextColor;
@@ -140,4 +153,14 @@ void CHudAirboatRacer::Paint()
 	surface()->DrawSetTextFont(m_hTextFont);
 	surface()->DrawSetTextPos(label_powerup_x, label_powerup_y);
 	surface()->DrawUnicodeString(sLabelPowerup);
+
+	// Health Label
+	surface()->DrawSetTextFont(m_hTextFont);
+	surface()->DrawSetTextPos(label_health_x, label_health_y);
+	surface()->DrawUnicodeString(sLabelHealth);
+
+	// Health Number
+	surface()->DrawSetTextFont(m_hNumberFont);
+	surface()->DrawSetTextPos(value_health_x, value_health_y);
+	surface()->DrawUnicodeString(sValueHealth);
 }

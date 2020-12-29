@@ -19,6 +19,7 @@ public:
 protected:
 	virtual void Paint();
 	int m_iSpeed;
+	int m_iHealth;
 	char m_szLapInfo[256];
 	int m_nPowerup1; // Nitro
 	int m_nPowerup2; // Jump
@@ -43,4 +44,9 @@ protected:
 	CPanelAnimationVarAliasType(float, label_powerup_y, "label_powerup_y", "10", "proportional_float");
 	CPanelAnimationVarAliasType(float, icon_powerup_x, "icon_powerup_x", "64", "proportional_float");
 	CPanelAnimationVarAliasType(float, icon_powerup_y, "icon_powerup_y", "10", "proportional_float");
+
+	CPanelAnimationVarAliasType(float, label_health_x, "label_health_x", "8", "proportional_float");
+	CPanelAnimationVarAliasType(float, label_health_y, "label_health_y", "30", "proportional_float");
+	CPanelAnimationVarAliasType(float, value_health_x, "value_health_x", "64", "proportional_float");
+	CPanelAnimationVarAliasType(float, value_health_y, "value_health_y", "30", "proportional_float");
 };

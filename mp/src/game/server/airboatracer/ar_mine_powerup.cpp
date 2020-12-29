@@ -67,7 +67,7 @@ void CAR_MinePowerup::PhysicsSimulate(void)
 
 void CAR_MinePowerup::ExplodeConcussion(CBaseEntity *pOther)
 {
-	if (!pOther->IsSolid())
+	if (stricmp(pOther->GetClassname(), "prop_vehicle_airboat") != 0)
 		return;
 
 	Vector vecVelocity;
