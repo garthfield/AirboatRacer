@@ -33,6 +33,8 @@ $Project "Server (HL2MP)"
 			$File	"airboatracer\ar_powerup.cpp"
 			$File	"airboatracer\ar_player.h"
 			$File	"airboatracer\ar_player.cpp"
+			$File	"airboatracer\ar_mine_powerup.h"
+			$File	"airboatracer\ar_mine_powerup.cpp"
 		}
 
 		$File	"ai_relationship.cpp"

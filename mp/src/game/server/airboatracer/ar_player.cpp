@@ -2,6 +2,7 @@
 #include "ar_player.h"
 #include "ar_startline.h"
 #include "in_buttons.h"
+#include "ar_mine_powerup.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -10,7 +11,7 @@ LINK_ENTITY_TO_CLASS(player, CAR_Player);
 
 void CAR_Player::Spawn(void)
 {
-	Msg("CAR_Player Spawn called\n");
+	DevMsg("CAR_Player Spawn called\n");
 	BaseClass::Spawn();
 
 	// Send initial lap message
@@ -19,12 +20,13 @@ void CAR_Player::Spawn(void)
 	SendHudLapMsg(msg);
 
 	// Send message to HUD clearing powerup
-	SendHudPowerupMsg(0);
+	SendHudPowerupMsg(3);
+	m_iPowerup = 3;
 }
 
 void CAR_Player::CreateAirboat(void)
 {
-	Msg("CreateAirboat\n");
+	DevMsg("CreateAirboat\n");
 
 	// Create an airboat in front of the player
 	Vector vecForward;
@@ -62,7 +64,7 @@ void CAR_Player::CreatePowerup()
 {
 	// Only allowed 1 pickup at a time
 	if (m_iPowerup == NULL) {
-		m_iPowerup = RandomInt(1, 2);
+		m_iPowerup = RandomInt(3,3);
 		DevMsg("CREATED POWER UP: %d", m_iPowerup);
 		SendHudPowerupMsg(m_iPowerup);
 	}
@@ -70,6 +72,8 @@ void CAR_Player::CreatePowerup()
 
 void CAR_Player::ExecutePowerup()
 {
+	DevMsg("ExecutePowerup %d\n", m_iPowerup);
+
 	if (m_iPowerup == NULL)
 		return;
 
@@ -100,6 +104,9 @@ void CAR_Player::ExecutePowerup()
 		float m_flPushSpeed = 1000;
 		pVehicle->ApplyAbsVelocityImpulse(m_flPushSpeed * vecAbsDir);
 	}
+	else if (m_iPowerup == 3) {
+		CreateMinePowerup();
+	}
 
 	// Send message to HUD clearing powerup
 	SendHudPowerupMsg(0);
@@ -124,4 +131,18 @@ void CAR_Player::SendHudPowerupMsg(int iPowerup)
 	UserMessageBegin(filter, "Powerup");
 	WRITE_BYTE(iPowerup);
 	MessageEnd();
+}
+
+void CAR_Player::CreateMinePowerup()
+{
+	Vector vecForward;
+	AngleVectors(EyeAngles(), &vecForward);
+	Vector vecOrigin = GetAbsOrigin() + vecForward * 256 + Vector(0, 0, 64);
+
+	CAR_MinePowerup *pMine = static_cast<CAR_MinePowerup*>(CreateEntityByName("r_mine_powerup"));
+	pMine->SetAbsOrigin(vecOrigin);
+	pMine->SetOwnerEntity(this);
+	DispatchSpawn(pMine);
+
+	DevMsg("CreateMinePowerup entity index: %d\n", pMine->entindex());
 }

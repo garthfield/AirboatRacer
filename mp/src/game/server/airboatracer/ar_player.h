@@ -18,6 +18,7 @@ public:
 	void SendHudPowerupMsg(int iPowerup);
 	void CreatePowerup();
 	void ExecutePowerup(void);
+	void CreateMinePowerup(void);
 
 private:
 	CBaseEntity *m_pAirboat;
