@@ -20,6 +20,7 @@ ipch
 *.idb
 *.vcxproj
 *.sln
+textwindow_temp.html
 
 # OSX/Linux build products
 *.mak
