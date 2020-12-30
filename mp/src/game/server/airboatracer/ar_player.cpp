@@ -143,7 +143,7 @@ void CAR_Player::CreateMinePowerup()
 {
 	Vector vecForward;
 	AngleVectors(EyeAngles(), &vecForward);
-	Vector vecOrigin = GetAbsOrigin() + vecForward * 256 + Vector(0, 0, 64);
+	Vector vecOrigin = GetAbsOrigin() + vecForward * 512 + Vector(0, 0, 64);
 
 	EmitSound("NPC_AttackHelicopter.DropMine");
 

@@ -5,9 +5,10 @@
 #include "tier0/memdbgon.h"
 
 #define GRENADE_HELICOPTER_MODEL "models/combine_helicopter/helicopter_bomb01.mdl"
-#define MINE_DAMAGE 25.0
-#define MINE_RADIUS 275.0
+#define MINE_DAMAGE 50.0
+#define MINE_DAMAGE_RADIUS 512.0
 #define MINE_FORCE 55000.0
+#define MINE_PROXIMITY_RADIUS 128
 
 LINK_ENTITY_TO_CLASS(r_mine_powerup, CAR_MinePowerup);
 
@@ -40,6 +41,9 @@ void CAR_MinePowerup::Spawn()
 
 	// Explode on contact
 	SetTouch(&CAR_MinePowerup::ExplodeConcussion);
+
+	SetThink(&CAR_MinePowerup::MineThink);
+	SetNextThink(gpGlobals->curtime + 0.1f);
 
 	CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
 	CReliableBroadcastRecipientFilter filter;
@@ -86,7 +90,7 @@ void CAR_MinePowerup::ExplodeConcussion(CBaseEntity *pOther)
 void CAR_MinePowerup::DoExplosion(const Vector &vecOrigin, const Vector &vecVelocity)
 {
 	ExplosionCreate(GetAbsOrigin(), GetAbsAngles(), GetOwnerEntity() ? GetOwnerEntity() : this, MINE_DAMAGE,
-		MINE_RADIUS, (SF_ENVEXPLOSION_NOSPARKS | SF_ENVEXPLOSION_NODLIGHTS | SF_ENVEXPLOSION_NODECAL | SF_ENVEXPLOSION_NOFIREBALL | SF_ENVEXPLOSION_NOPARTICLES),
+		MINE_DAMAGE_RADIUS, (SF_ENVEXPLOSION_NOSPARKS | SF_ENVEXPLOSION_NODLIGHTS | SF_ENVEXPLOSION_NODECAL | SF_ENVEXPLOSION_NOFIREBALL | SF_ENVEXPLOSION_NOPARTICLES),
 		MINE_FORCE, this);
 
 	if (GetShakeAmplitude())
@@ -124,4 +128,20 @@ void CAR_MinePowerup::UpdateOnRemove()
 	
 	g_pNotify->ClearEntity(this);
 	BaseClass::UpdateOnRemove();
+}
+
+void CAR_MinePowerup::MineThink()
+{
+	CBaseEntity *ent = NULL;
+
+	// Loop around all the entities within a given radius around the mine
+	for (CEntitySphereQuery sphere(GetAbsOrigin(), MINE_PROXIMITY_RADIUS); (ent = sphere.GetCurrentEntity()) != NULL; sphere.NextEntity())
+	{
+		// If entity is airboat detonate
+		if (stricmp(ent->GetClassname(), "prop_vehicle_airboat") == 0) {
+			CAR_MinePowerup::ExplodeConcussion(ent);
+		}
+	}
+
+	SetNextThink(gpGlobals->curtime + 0.1f);
 }

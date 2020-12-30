@@ -18,6 +18,7 @@ public:
 
 	virtual void Precache();
 	void Spawn(void);
+	void MineThink(void);
 	virtual void UpdateOnRemove();
 	virtual void PhysicsSimulate(void);
 
