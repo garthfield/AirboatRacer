@@ -9,6 +9,12 @@
 
 LINK_ENTITY_TO_CLASS(player, CAR_Player);
 
+void CAR_Player::Precache(void)
+{
+	BaseClass::Precache();
+	PrecacheScriptSound("NPC_AttackHelicopter.DropMine");
+}
+
 void CAR_Player::Spawn(void)
 {
 	DevMsg("CAR_Player Spawn called\n");
@@ -138,6 +144,8 @@ void CAR_Player::CreateMinePowerup()
 	Vector vecForward;
 	AngleVectors(EyeAngles(), &vecForward);
 	Vector vecOrigin = GetAbsOrigin() + vecForward * 256 + Vector(0, 0, 64);
+
+	EmitSound("NPC_AttackHelicopter.DropMine");
 
 	CAR_MinePowerup *pMine = static_cast<CAR_MinePowerup*>(CreateEntityByName("r_mine_powerup"));
 	pMine->SetAbsOrigin(vecOrigin);

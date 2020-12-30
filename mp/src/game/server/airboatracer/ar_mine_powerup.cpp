@@ -18,6 +18,7 @@ void CAR_MinePowerup::Precache(void)
 {
 	BaseClass::Precache();
 	PrecacheModel(GRENADE_HELICOPTER_MODEL);
+	PrecacheScriptSound("NPC_AttackHelicopterGrenade.Ping");
 }
 
 void CAR_MinePowerup::Spawn()
@@ -26,17 +27,24 @@ void CAR_MinePowerup::Spawn()
 
 	SetCollisionGroup(COLLISION_GROUP_PROJECTILE);
 	SetModel(GRENADE_HELICOPTER_MODEL);
-	SetSolid(SOLID_BBOX);
-	SetCollisionBounds(Vector(-12.5, -12.5, -12.5), Vector(12.5, 12.5, 12.5));
-	VPhysicsInitShadow(false, false);
-	SetMoveType(MOVETYPE_FLYGRAVITY, MOVECOLLIDE_FLY_CUSTOM);
-	SetElasticity(0.5f);
-	AddEffects(EF_NOSHADOW);
+	m_nSkin = 0;
+
+	// Gives mine physics so it will roll & move depending on surface it lands on
+	IPhysicsObject *pPhysicsObject = VPhysicsInitNormal(SOLID_VPHYSICS, GetSolidFlags(), false);
+	SetMoveType(MOVETYPE_VPHYSICS);
+
+	Vector vecAbsVelocity = GetAbsVelocity();
+	pPhysicsObject->AddVelocity(&vecAbsVelocity, NULL);
 
 	SetGravity(UTIL_ScaleForGravity(400));
 
 	// Explode on contact
 	SetTouch(&CAR_MinePowerup::ExplodeConcussion);
+
+	CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
+	CReliableBroadcastRecipientFilter filter;
+	m_pWarnSound = controller.SoundCreate(filter, entindex(), "NPC_AttackHelicopterGrenade.Ping");
+	controller.Play(m_pWarnSound, 1.0, PITCH_NORM);
 }
 
 //------------------------------------------------------------------------------
@@ -105,4 +113,15 @@ void CAR_MinePowerup::DoExplosion(const Vector &vecOrigin, const Vector &vecVelo
 	}
 
 	UTIL_Remove(this);
+}
+
+void CAR_MinePowerup::UpdateOnRemove()
+{
+	if (m_pWarnSound) {
+		CSoundEnvelopeController &controller = CSoundEnvelopeController::GetController();
+		controller.SoundDestroy(m_pWarnSound);
+	}
+	
+	g_pNotify->ClearEntity(this);
+	BaseClass::UpdateOnRemove();
 }

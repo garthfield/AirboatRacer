@@ -11,6 +11,7 @@ class CAR_Player : public CHL2MP_Player
 public:
 	DECLARE_CLASS(CAR_Player, CHL2MP_Player);
 
+	virtual void Precache();
 	virtual void Spawn(void);
 	virtual void CreateAirboat(void);
 	virtual void PreThink(void);
