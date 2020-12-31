@@ -30,7 +30,7 @@ void FinishClientPutInServer(CAR_Player *pPlayer)
 	pPlayer->InitialSpawn();
 	pPlayer->Spawn();
 
-	pPlayer->CreateAirboat();
+	pPlayer->CreateAirboat(false);
 
 	char sName[128];
 	Q_strncpy(sName, pPlayer->GetPlayerName(), sizeof(sName));
@@ -148,9 +148,9 @@ void ClientGamePrecache(void)
 // called by ClientKill and DeadThink
 void respawn(CBaseEntity *pEdict, bool fCopyCorpse)
 {
-	Msg("respawn called\n");
+	DevMsg("respawn called\n");
 
-	CHL2MP_Player *pPlayer = ToHL2MPPlayer(pEdict);
+	CAR_Player *pPlayer = ToARPlayer(pEdict);
 
 	if (pPlayer)
 	{

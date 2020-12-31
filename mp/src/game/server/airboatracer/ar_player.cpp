@@ -3,6 +3,7 @@
 #include "ar_startline.h"
 #include "in_buttons.h"
 #include "ar_mine_powerup.h"
+#include "vehicle_base.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -30,16 +31,14 @@ void CAR_Player::Spawn(void)
 	m_iPowerup = 3;
 }
 
-void CAR_Player::CreateAirboat(void)
+void CAR_Player::CreateAirboat(bool stopEngine)
 {
 	DevMsg("CreateAirboat\n");
 
 	// Create an airboat in front of the player
-	Vector vecForward;
-	AngleVectors(EyeAngles(), &vecForward);
 	CBaseEntity *m_pAirboat = (CBaseEntity*)CreateEntityByName("prop_vehicle_airboat");
 	if (m_pAirboat) {
-		Vector vecOrigin = GetAbsOrigin() + vecForward * 256 + Vector(0, 0, 64);
+		Vector vecOrigin = GetAbsOrigin();
 		QAngle vecAngles(0, GetAbsAngles().y - 90, 0);
 		m_pAirboat->SetAbsOrigin(vecOrigin);
 		m_pAirboat->SetAbsAngles(vecAngles);
@@ -52,6 +51,16 @@ void CAR_Player::CreateAirboat(void)
 
 		// Put player inside airboat
 		GetInVehicle(m_pAirboat->GetServerVehicle(), VEHICLE_ROLE_DRIVER);
+
+		// Stop Airboat 
+		if (stopEngine) {
+			CPropVehicleDriveable *pDrivable = dynamic_cast<CPropVehicleDriveable*>(m_pAirboat);
+			pDrivable->StopEngine();
+		}
+
+		// Correct player view angles
+		QAngle playerEyeAngles(0, 90, 0);
+		SnapEyeAngles(playerEyeAngles);
 	}
 }
 

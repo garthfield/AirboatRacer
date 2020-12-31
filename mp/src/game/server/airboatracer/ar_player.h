@@ -13,7 +13,7 @@ public:
 
 	virtual void Precache();
 	virtual void Spawn(void);
-	virtual void CreateAirboat(void);
+	virtual void CreateAirboat(bool stopEngine);
 	virtual void PreThink(void);
 	void SendHudLapMsg(char *msg);
 	void SendHudPowerupMsg(int iPowerup);
