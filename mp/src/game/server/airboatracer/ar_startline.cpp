@@ -68,8 +68,17 @@ static const char *s_PreserveEnts[] =
 	"", // END Marker
 };
 
+void CAR_StartlineEntity::Precache(void)
+{
+	BaseClass::Precache();
+	PrecacheScriptSound("Racesound.Light1");
+	PrecacheScriptSound("Racesound.Light2");
+}
+
 void CAR_StartlineEntity::Spawn()
 {
+	Precache();
+
 	DevMsg("Spawned Startline (Last checkpoint: %i)\n", m_iLastCheckpoint);
 
 	SetThink(&CAR_StartlineEntity::StartlineThink);
@@ -126,7 +135,9 @@ void CAR_StartlineEntity::StartlineThink()
 					m_StopwatchWarmup.Stop();
 					RestartGame();
 					m_RaceStatus = COUNTDOWN;
-					m_StopwatchCountdown.Start(3);
+					PlaySound("Racesound.Light1");
+					m_StopwatchCountdownBeep.Start(1);
+					m_StopwatchCountdown.Start(2);
 				}
 			}
 			break;
@@ -136,8 +147,16 @@ void CAR_StartlineEntity::StartlineThink()
 				if (m_StopwatchCountdown.Expired()) {
 					DevMsg("RACE STARTED\n");
 					m_StopwatchCountdown.Stop();
+					PlaySound("Racesound.Light2");
 					StartAirboatEngines();
 					m_RaceStatus = RACING;
+				}
+				else {
+					// Check to see if we should play second beep
+					if (m_StopwatchCountdownBeep.Expired()) {
+						m_StopwatchCountdownBeep.Stop();
+						PlaySound("Racesound.Light1");
+					}
 				}
 			}
 			break;
@@ -317,4 +336,15 @@ void CAR_StartlineEntity::CleanUpMap()
 	// DO NOT CALL SPAWN ON info_node ENTITIES!
 
 	MapEntity_ParseAllEntities(engine->GetMapEntitiesString(), &filter, true);
+}
+
+void CAR_StartlineEntity::PlaySound(const char *soundname)
+{
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+		CBasePlayer *pBasePlayer = UTIL_PlayerByIndex(i);
+		if (pBasePlayer == NULL)
+			continue;
+
+		pBasePlayer->EmitSound(soundname);
+	}
 }

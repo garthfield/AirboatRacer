@@ -1,0 +1,130 @@
+// Powerup Sounds
+"Powerup.Nitro"
+{
+	"channel"		"CHAN_WEAPON"
+	"soundlevel"		"SNDLVL_90dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"1.0"
+	"wave"			"powerups/nitro.wav"
+
+	
+}
+
+"Powerup.Jump"
+{
+	"channel"		"CHAN_WEAPON"
+	"soundlevel"		"SNDLVL_90dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"1.0"
+	"wave"			"powerups/jump.wav"
+
+	
+}
+
+"Powerup.Shockwave"
+{
+	"channel"		"CHAN_WEAPON"
+	"soundlevel"		"SNDLVL_90dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"1.0"
+	"wave"			"powerups/shockwave.wav"
+
+	
+}
+
+// Hud event sounds
+"Hudsound.Lap"
+{
+	"channel"		"CHAN_ITEM"
+	"soundlevel"		"SNDLVL_85dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"1"
+	"wave"			"hud/newlap.wav"
+
+	
+}
+
+"Hudsound.FinalLap"
+{
+	"channel"		"CHAN_ITEM"
+	"soundlevel"		"SNDLVL_85dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"1"
+	"wave"			"hud/final_lap.wav"
+
+	
+}
+
+"Hudsound.RposUp"
+{
+	"channel"		"CHAN_ITEM"
+	"soundlevel"		"SNDLVL_65dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"0.5"
+	"wave"			"hud/position_up.wav"
+
+	
+}
+
+"Hudsound.RposDown"
+{
+	"channel"		"CHAN_ITEM"
+	"soundlevel"		"SNDLVL_65dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"0.5"
+	"wave"			"hud/position_down_02.wav"
+
+	
+}
+"Hudsound.ScoreCount"
+{
+	"channel"		"CHAN_ITEM"
+	"soundlevel"		"SNDLVL_75dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"1"
+	"wave"			"hud/score.wav"
+
+	
+}
+"Hudsound.Finish"
+{
+	"channel"		"CHAN_ITEM"
+	"soundlevel"		"SNDLVL_85dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"1"
+	"wave"			"hud/race_finish_02.wav"
+
+	
+}
+
+// Race and world sounds.
+"Racesound.Powerup"
+{
+	"channel"		"CHAN_ITEM"
+	"soundlevel"		"SNDLVL_85dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"1"
+	"wave"			"racer/powerup_02.wav"
+
+	
+}
+"Racesound.Light1"
+{
+	"channel"		"CHAN_ITEM"
+	"soundlevel"		"SNDLVL_75dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"1"
+	"wave"			"racer/starting_light_01.wav"
+
+	
+}
+"Racesound.Light2"
+{
+	"channel"		"CHAN_ITEM"
+	"soundlevel"		"SNDLVL_75dB"
+	"pitch"			"PITCH_NORM"
+	"volume"		"1"
+	"wave"			"racer/starting_light_02.wav"
+
+	
+}

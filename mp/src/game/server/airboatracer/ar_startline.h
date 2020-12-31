@@ -24,6 +24,7 @@ class CAR_StartlineEntity : public CTriggerMultiple
 public:
 	DECLARE_CLASS(CAR_StartlineEntity, CTriggerMultiple);
 
+	virtual void Precache();
 	void Spawn(void);
 	void StartlineThink(void);
 	void StartTouch(CBaseEntity *pOther);
@@ -34,6 +35,7 @@ public:
 	void RespawnPlayers(void);
 	void StartAirboatEngines(void);
 	void CleanUpMap(void);
+	void PlaySound(const char *soundname);
 
 private:
 	int m_iPlayerCheckpoint[MAX_PLAYERS]; // Stores each player's current checkpoint
@@ -42,6 +44,7 @@ private:
 	RaceStatus m_RaceStatus;
 	CSimpleStopwatch m_StopwatchWarmup;
 	CSimpleStopwatch m_StopwatchCountdown;
+	CSimpleStopwatch m_StopwatchCountdownBeep;
 
 	DECLARE_DATADESC();
 };
