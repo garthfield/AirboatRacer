@@ -8,6 +8,8 @@
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+extern CBaseEntity *g_pLastSpawn;
+
 LINK_ENTITY_TO_CLASS(player, CAR_Player);
 
 void CAR_Player::Precache(void)
@@ -172,4 +174,18 @@ void CAR_Player::CreateMinePowerup()
 	DispatchSpawn(pMine);
 
 	DevMsg("CreateMinePowerup entity index: %d\n", pMine->entindex());
+}
+
+CBaseEntity* CAR_Player::EntSelectSpawnPoint(void) {
+	DevMsg("CAR_Player::EntSelectSpawnPoint\n");
+
+	CBaseEntity *pSpot = NULL;
+	while ((pSpot = gEntList.FindEntityByClassname(pSpot, "info_player_start")) != NULL) {
+		if (g_pGameRules->IsSpawnPointValid(pSpot, this)) {
+			g_pLastSpawn = pSpot;
+			return pSpot;
+		}
+	}
+
+	return gEntList.FindEntityByClassname(pSpot, "info_player_start");
 }

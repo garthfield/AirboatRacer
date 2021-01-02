@@ -21,6 +21,7 @@ public:
 	void CreatePowerup();
 	void ExecutePowerup(void);
 	void CreateMinePowerup(void);
+	virtual CBaseEntity* EntSelectSpawnPoint(void);
 
 private:
 	CBaseEntity *m_pAirboat;
