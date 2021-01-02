@@ -38,7 +38,7 @@ void CAR_Player::CreateAirboat(bool stopEngine)
 	DevMsg("CreateAirboat\n");
 
 	// Create an airboat in front of the player
-	CBaseEntity *m_pAirboat = (CBaseEntity*)CreateEntityByName("prop_vehicle_airboat");
+	m_pAirboat = (CBaseEntity*)CreateEntityByName("prop_vehicle_airboat");
 	if (m_pAirboat) {
 		Vector vecOrigin = GetAbsOrigin();
 		QAngle vecAngles(0, GetAbsAngles().y - 90, 0);
@@ -52,17 +52,13 @@ void CAR_Player::CreateAirboat(bool stopEngine)
 		m_pAirboat->Activate();
 
 		// Put player inside airboat
-		GetInVehicle(m_pAirboat->GetServerVehicle(), VEHICLE_ROLE_DRIVER);
+		EnterAirboat();
 
 		// Stop Airboat 
 		if (stopEngine) {
 			CPropVehicleDriveable *pDrivable = dynamic_cast<CPropVehicleDriveable*>(m_pAirboat);
 			pDrivable->StopEngine();
 		}
-
-		// Correct player view angles
-		QAngle playerEyeAngles(0, 90, 0);
-		SnapEyeAngles(playerEyeAngles);
 	}
 }
 
@@ -188,4 +184,17 @@ CBaseEntity* CAR_Player::EntSelectSpawnPoint(void) {
 	}
 
 	return gEntList.FindEntityByClassname(pSpot, "info_player_start");
+}
+
+void CAR_Player::EnterAirboat()
+{
+	if (m_pAirboat == NULL) {
+		return;
+	}
+
+	GetInVehicle(m_pAirboat->GetServerVehicle(), VEHICLE_ROLE_DRIVER);
+
+	// Correct player view angles
+	QAngle playerEyeAngles(0, 90, 0);
+	SnapEyeAngles(playerEyeAngles);
 }
