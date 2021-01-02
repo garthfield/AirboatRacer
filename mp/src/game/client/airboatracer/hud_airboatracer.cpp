@@ -49,12 +49,12 @@ void CHudAirboatRacer::ApplySchemeSettings(IScheme *scheme)
 
 void CHudAirboatRacer::MsgFunc_Lap(bf_read &msg) {
 	msg.ReadString(m_szLapInfo, sizeof(m_szLapInfo));
-	Msg("Received Lap: %s\n", m_szLapInfo);
+	DevMsg("Received Lap: %s\n", m_szLapInfo);
 }
 
 void CHudAirboatRacer::MsgFunc_Powerup(bf_read &msg) {
 	m_iPowerupType = msg.ReadByte();
-	Msg("Received Powerup Type: %d\n", m_iPowerupType);
+	DevMsg("Received Powerup Type: %d\n", m_iPowerupType);
 }
 
 void CHudAirboatRacer::OnThink()

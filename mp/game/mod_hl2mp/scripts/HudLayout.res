@@ -36,4 +36,28 @@
         "value_health_x" "155"
         "value_health_y" "32"
     }
+
+    HudLaptimes
+    {
+        "fieldName"     "HudLaptimes"
+        "xpos"  "745"
+        "ypos"  "10"
+        "wide" "100"
+        "tall" "120"
+        "visible" "1"
+        "enabled" "1"
+
+        "PaintBackgroundType"   "2"
+
+        "TextColor" "255 255 255 192"
+        "TextFont" "Default"
+        "TextFontSmall" "DefaultSmall"
+        "NumberFont" "HudNumbers"
+
+        "label_lap_x" "10"
+        "label_lap_y" "5"
+        "label_value_x" "10"
+        "label_value_y" "25"
+    }
+
 }

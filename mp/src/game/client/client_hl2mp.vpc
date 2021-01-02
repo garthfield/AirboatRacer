@@ -14,7 +14,7 @@ $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories		"$BASE;hl2mp\ui,.\hl2mp,$SRCDIR\game\shared\hl2mp,.\hl2,.\hl2\elements,$SRCDIR\game\shared\hl2"
+		$AdditionalIncludeDirectories		"$BASE;hl2mp\ui,.\hl2mp,$SRCDIR\game\shared\hl2mp,.\hl2,.\hl2\elements,$SRCDIR\game\shared\hl2,$SRCDIR\game\shared\airboatracer"
 		$PreprocessorDefinitions			"$BASE;HL2MP;HL2_CLIENT_DLL"
 	}
 }
@@ -27,6 +27,9 @@ $Project "Client (HL2MP)"
 		{
 			$File	"airboatracer\hud_airboatracer.cpp"
 			$File	"airboatracer\hud_airboatracer.h"
+			$File	"airboatracer\hud_laptimes.cpp"
+			$File	"airboatracer\hud_laptimes.h"
+			$File	"$SRCDIR\game\shared\airboatracer\ar_shareddefs.h"
 		}
 
 		-$File	"$SRCDIR\game\shared\weapon_parse_default.cpp"

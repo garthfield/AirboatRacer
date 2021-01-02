@@ -1838,7 +1838,13 @@
     <ClInclude Include="viewpostprocess.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\airboatracer\ar_shareddefs.h">
+      <Filter>Source Files\AirboatRacer</Filter>
+    </ClInclude>
     <ClInclude Include="airboatracer\hud_airboatracer.h">
+      <Filter>Source Files\AirboatRacer</Filter>
+    </ClInclude>
+    <ClInclude Include="airboatracer\hud_laptimes.h">
       <Filter>Source Files\AirboatRacer</Filter>
     </ClInclude>
     <ClInclude Include="game_controls\basemodel_panel.h">
@@ -2993,6 +2999,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="airboatracer\hud_airboatracer.cpp">
+      <Filter>Source Files\AirboatRacer</Filter>
+    </ClCompile>
+    <ClCompile Include="airboatracer\hud_laptimes.cpp">
       <Filter>Source Files\AirboatRacer</Filter>
     </ClCompile>
     <ClCompile Include="game_controls\basemodel_panel.cpp">

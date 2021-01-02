@@ -139,6 +139,16 @@ void CAR_Player::SendHudLapMsg(char *message)
 	MessageEnd();
 }
 
+void CAR_Player::SendHudLapTime(int iLap, float fTime)
+{
+	CSingleUserRecipientFilter filter((CBasePlayer *)this);
+	filter.MakeReliable();
+	UserMessageBegin(filter, "LapTime");
+	WRITE_LONG(iLap);
+	WRITE_FLOAT(fTime);
+	MessageEnd();
+}
+
 void CAR_Player::SendHudPowerupMsg(int iPowerup)
 {
 	CSingleUserRecipientFilter filter((CBasePlayer *)this);

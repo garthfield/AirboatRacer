@@ -16,6 +16,7 @@ public:
 	virtual void CreateAirboat(bool stopEngine);
 	virtual void PreThink(void);
 	void SendHudLapMsg(char *msg);
+	void SendHudLapTime(int iLap, float fTime);
 	void SendHudPowerupMsg(int iPowerup);
 	void CreatePowerup();
 	void ExecutePowerup(void);

@@ -18,7 +18,7 @@ END_DATADESC()
 extern void respawn(CBaseEntity *pEdict, bool fCopyCorpse);
 extern bool FindInList(const char **pStrings, const char *pToFind);
 
-ConVar ar_laps("race_laps", "3", FCVAR_REPLICATED | FCVAR_NOTIFY, "Set the number of laps each race is", true, 1, false, 0);
+ConVar ar_laps("race_laps", "3", FCVAR_REPLICATED | FCVAR_NOTIFY, "Set the number of laps each race is", true, 1, true, MAX_LAPS);
 ConVar ar_minimum_players("race_minimum_players", "1", FCVAR_REPLICATED | FCVAR_NOTIFY, "Minimum number of players for a race to start", true, 1, false, 0);
 ConVar ar_warmup_time("race_warmup_time", "20", FCVAR_REPLICATED | FCVAR_NOTIFY, "How many seconds for warmup", true, 1, false, 0);
 
@@ -93,8 +93,16 @@ void CAR_StartlineEntity::StartTouch(CBaseEntity *pOther)
 {
 	if (stricmp(pOther->GetClassname(), "player") == 0) {
 		if (m_iPlayerCheckpoint[pOther->entindex() - 1] == m_iLastCheckpoint) {
+			CAR_Player *pPlayer = ToARPlayer(pOther);
+
 			m_iPlayerLaps[pOther->entindex() - 1]++;
 			m_iPlayerCheckpoint[pOther->entindex() - 1] = 0;
+
+			float fLapTime = gpGlobals->curtime - m_iPlayerLapStart[pOther->entindex() - 1];
+			SetLapTime(pOther, m_iPlayerLaps[pOther->entindex() - 1], fLapTime);
+			m_iPlayerLapStart[pOther->entindex() - 1] = gpGlobals->curtime;
+			
+			pPlayer->SendHudLapTime(m_iPlayerLaps[pOther->entindex() - 1], fLapTime);
 
 			if (m_iPlayerLaps[pOther->entindex() - 1] == ar_laps.GetInt()) {
 				DevMsg("Race Finished. Player: %d wins\n", pOther->entindex());
@@ -102,7 +110,6 @@ void CAR_StartlineEntity::StartTouch(CBaseEntity *pOther)
 			else {
 				char msg[10];
 				Q_snprintf(msg, sizeof(msg), "%d/%d", m_iPlayerLaps[pOther->entindex() - 1] + 1, ar_laps.GetInt());
-				CAR_Player *pPlayer = ToARPlayer(pOther);
 				pPlayer->SendHudLapMsg(msg);
 			}
 		}
@@ -129,7 +136,14 @@ void CAR_StartlineEntity::StartlineThink()
 			break;
 		case WARMUP:
 			if (m_StopwatchWarmup.IsRunning()) {
-				DevMsg("WARMUP REMAINING: %.2f\n", m_StopwatchWarmup.GetRemaining());
+				char szText[200];
+				if (m_StopwatchWarmup.GetRemaining() < 1) {
+					Q_snprintf(szText, sizeof(szText), "RACE STARTING");
+				} else {
+					Q_snprintf(szText, sizeof(szText), "WARMUP %d", (int)m_StopwatchWarmup.GetRemaining());
+				}
+				UTIL_ClientPrintAll(HUD_PRINTCENTER, szText);
+
 				if (m_StopwatchWarmup.Expired()) {
 					DevMsg("RACE COUNTDOWN STARTING\n");
 					m_StopwatchWarmup.Stop();
@@ -143,12 +157,12 @@ void CAR_StartlineEntity::StartlineThink()
 			break;
 		case COUNTDOWN:
 			if (m_StopwatchCountdown.IsRunning()) {
-				DevMsg("COUNTDOWN REMAINING: %.2f\n", m_StopwatchCountdown.GetRemaining());
 				if (m_StopwatchCountdown.Expired()) {
 					DevMsg("RACE STARTED\n");
 					m_StopwatchCountdown.Stop();
 					PlaySound("Racesound.Light2");
 					StartAirboatEngines();
+					SetPlayerLapStarts();
 					m_RaceStatus = RACING;
 				}
 				else {
@@ -347,4 +361,20 @@ void CAR_StartlineEntity::PlaySound(const char *soundname)
 
 		pBasePlayer->EmitSound(soundname);
 	}
+}
+
+void CAR_StartlineEntity::SetPlayerLapStarts()
+{
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+		CBasePlayer *pBasePlayer = UTIL_PlayerByIndex(i);
+		if (pBasePlayer == NULL)
+			continue;
+
+		m_iPlayerLapStart[pBasePlayer->entindex() - 1] = gpGlobals->curtime;
+	}
+}
+
+void CAR_StartlineEntity::SetLapTime(CBaseEntity *pPlayer, int iLap, float fLapTime)
+{
+	m_iPlayerLapTimes[pPlayer->entindex() - 1][iLap] = fLapTime;
 }

@@ -15,7 +15,7 @@ $Configuration
 {
 	$Compiler
 	{
-		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\game\shared\hl2,.\hl2,.\hl2mp,$SRCDIR\game\shared\hl2mp"
+		$AdditionalIncludeDirectories	"$BASE;$SRCDIR\game\shared\hl2,.\hl2,.\hl2mp,$SRCDIR\game\shared\hl2mp,$SRCDIR\game\shared\airboatracer"
 		$PreprocessorDefinitions		"$BASE;HL2MP;HL2_DLL"
 	}
 }
@@ -35,6 +35,7 @@ $Project "Server (HL2MP)"
 			$File	"airboatracer\ar_player.cpp"
 			$File	"airboatracer\ar_mine_powerup.h"
 			$File	"airboatracer\ar_mine_powerup.cpp"
+			$File	"$SRCDIR\game\shared\airboatracer\ar_shareddefs.h"
 		}
 
 		$File	"ai_relationship.cpp"
