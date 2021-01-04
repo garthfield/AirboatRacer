@@ -29,8 +29,8 @@ void CAR_Player::Spawn(void)
 	SendHudLapMsg(msg);
 
 	// Send message to HUD clearing powerup
-	SendHudPowerupMsg(3);
-	m_iPowerup = 3;
+	SendHudPowerupMsg(0);
+	m_iPowerup = 0;
 }
 
 void CAR_Player::CreateAirboat(bool stopEngine)
@@ -38,25 +38,29 @@ void CAR_Player::CreateAirboat(bool stopEngine)
 	DevMsg("CreateAirboat\n");
 
 	// Create an airboat in front of the player
-	m_pAirboat = (CBaseEntity*)CreateEntityByName("prop_vehicle_airboat");
-	if (m_pAirboat) {
+	CBaseEntity *pAirboat = (CBaseEntity*)CreateEntityByName("prop_vehicle_airboat");
+	if (pAirboat) {
 		Vector vecOrigin = GetAbsOrigin();
 		QAngle vecAngles(0, GetAbsAngles().y - 90, 0);
-		m_pAirboat->SetAbsOrigin(vecOrigin);
-		m_pAirboat->SetAbsAngles(vecAngles);
-		m_pAirboat->KeyValue("model", "models/airboat.mdl");
-		m_pAirboat->KeyValue("solid", "6");
-		m_pAirboat->KeyValue("targetname", "airboat");
-		m_pAirboat->KeyValue("vehiclescript", "scripts/vehicles/airboat.txt");
-		DispatchSpawn(m_pAirboat);
-		m_pAirboat->Activate();
+		pAirboat->SetAbsOrigin(vecOrigin);
+		pAirboat->SetAbsAngles(vecAngles);
+		pAirboat->KeyValue("model", "models/airboat.mdl");
+		pAirboat->KeyValue("solid", "6");
+		pAirboat->KeyValue("targetname", "airboat");
+		pAirboat->KeyValue("vehiclescript", "scripts/vehicles/airboat.txt");
+		DispatchSpawn(pAirboat);
+		pAirboat->Activate();
 
 		// Put player inside airboat
-		EnterAirboat();
+		GetInVehicle(pAirboat->GetServerVehicle(), VEHICLE_ROLE_DRIVER);
+
+		// Correct player view angles
+		QAngle playerEyeAngles(0, 90, 0);
+		SnapEyeAngles(playerEyeAngles);
 
 		// Stop Airboat 
 		if (stopEngine) {
-			CPropVehicleDriveable *pDrivable = dynamic_cast<CPropVehicleDriveable*>(m_pAirboat);
+			CPropVehicleDriveable *pDrivable = dynamic_cast<CPropVehicleDriveable*>(pAirboat);
 			pDrivable->StopEngine();
 		}
 	}
@@ -184,17 +188,4 @@ CBaseEntity* CAR_Player::EntSelectSpawnPoint(void) {
 	}
 
 	return gEntList.FindEntityByClassname(pSpot, "info_player_start");
-}
-
-void CAR_Player::EnterAirboat()
-{
-	if (m_pAirboat == NULL) {
-		return;
-	}
-
-	GetInVehicle(m_pAirboat->GetServerVehicle(), VEHICLE_ROLE_DRIVER);
-
-	// Correct player view angles
-	QAngle playerEyeAngles(0, 90, 0);
-	SnapEyeAngles(playerEyeAngles);
 }

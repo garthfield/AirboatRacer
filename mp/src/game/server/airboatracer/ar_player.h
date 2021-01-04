@@ -25,7 +25,6 @@ public:
 	void EnterAirboat(void);
 
 private:
-	CBaseEntity *m_pAirboat;
 	int m_iPowerup;
 };
 

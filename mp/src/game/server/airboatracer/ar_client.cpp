@@ -158,7 +158,7 @@ void respawn(CBaseEntity *pEdict, bool fCopyCorpse)
 		{
 			// respawn player
 			pPlayer->Spawn();
-			pPlayer->EnterAirboat();
+			//pPlayer->EnterAirboat();
 		}
 		else
 		{

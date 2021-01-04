@@ -1,6 +1,5 @@
 #include "cbase.h"
 #include "ar_startline.h"
-#include "ar_player.h"
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
 #include "eventqueue.h"
 #include "hl2mp_gameinterface.h"
@@ -12,7 +11,8 @@
 LINK_ENTITY_TO_CLASS(r_startline, CAR_StartlineEntity);
 
 BEGIN_DATADESC(CAR_StartlineEntity)
-DEFINE_KEYFIELD(m_iLastCheckpoint, FIELD_INTEGER, "lastCheck"),
+	DEFINE_KEYFIELD(m_iLastCheckpoint, FIELD_INTEGER, "lastCheck"),
+	DEFINE_THINKFUNC(StartlineThink),
 END_DATADESC()
 
 extern void respawn(CBaseEntity *pEdict, bool fCopyCorpse);
@@ -65,6 +65,7 @@ static const char *s_PreserveEnts[] =
 	"r_startline",
 	"r_checkpoint",
 	"info_player_start",
+	"prop_vehicle_airboat",
 	"", // END Marker
 };
 
@@ -82,9 +83,9 @@ void CAR_StartlineEntity::Spawn()
 	DevMsg("Spawned Startline (Last checkpoint: %i)\n", m_iLastCheckpoint);
 
 	SetThink(&CAR_StartlineEntity::StartlineThink);
-	StartlineThink();
+	SetNextThink(gpGlobals->curtime + 0.1f);
 
-	m_RaceStatus = WAITING;
+	Reset();
 
 	BaseClass::Spawn();
 }
@@ -92,34 +93,47 @@ void CAR_StartlineEntity::Spawn()
 void CAR_StartlineEntity::StartTouch(CBaseEntity *pOther)
 {
 	if (stricmp(pOther->GetClassname(), "player") == 0) {
-		if (m_iPlayerCheckpoint[pOther->entindex() - 1] == m_iLastCheckpoint) {
+		if (m_iPlayerCheckpoint[pOther->entindex()] == m_iLastCheckpoint) {
 			CAR_Player *pPlayer = ToARPlayer(pOther);
 
-			m_iPlayerLaps[pOther->entindex() - 1]++;
-			m_iPlayerCheckpoint[pOther->entindex() - 1] = 0;
+			m_iPlayerLaps[pOther->entindex()]++;
+			m_iPlayerCheckpoint[pOther->entindex()] = 0;
 
-			float fLapTime = gpGlobals->curtime - m_iPlayerLapStart[pOther->entindex() - 1];
-			SetLapTime(pOther, m_iPlayerLaps[pOther->entindex() - 1], fLapTime);
-			m_iPlayerLapStart[pOther->entindex() - 1] = gpGlobals->curtime;
+			float fLapTime = gpGlobals->curtime - m_iPlayerLapStart[pOther->entindex()];
+			SetLapTime(pOther->entindex(), m_iPlayerLaps[pOther->entindex()], fLapTime);
+			m_iPlayerLapStart[pOther->entindex()] = gpGlobals->curtime;
 			
-			pPlayer->SendHudLapTime(m_iPlayerLaps[pOther->entindex() - 1], fLapTime);
+			pPlayer->SendHudLapTime(m_iPlayerLaps[pOther->entindex()], fLapTime);
 
-			if (m_iPlayerLaps[pOther->entindex() - 1] == ar_laps.GetInt()) {
-				DevMsg("Race Finished. Player: %d wins\n", pOther->entindex());
+			// Check if player finished race
+			DevMsg("player laps: %d total laps %d\n", GetPlayerLaps(pOther->entindex()), ar_laps.GetInt());
+
+			if (GetPlayerLaps(pOther->entindex()) == ar_laps.GetInt()) {
+
+				// Process finished player
+				FinishPlayer(pPlayer);
+
+				// Start finish race timer when the winner crossed the line
+				if (GetTotalFinished() == 1) {
+					m_RaceStatus = FINISH;
+					m_StopwatchFinish.Start(10);
+				}
+
+				UTIL_ClientPrintAll(HUD_PRINTCENTER, "%s1 WINS\n", ((CBasePlayer*)pOther)->GetPlayerName());
 			}
 			else {
 				char msg[10];
-				Q_snprintf(msg, sizeof(msg), "%d/%d", m_iPlayerLaps[pOther->entindex() - 1] + 1, ar_laps.GetInt());
+				Q_snprintf(msg, sizeof(msg), "%d/%d", m_iPlayerLaps[pOther->entindex()] + 1, ar_laps.GetInt());
 				pPlayer->SendHudLapMsg(msg);
 			}
 		}
-		DevMsg("CAR_StartlineEntity::StartTouch() entity:%s Laps: %d\n", pOther->GetClassname(), m_iPlayerLaps[pOther->entindex()-1]);
+		DevMsg("CAR_StartlineEntity::StartTouch() entity:%s Laps: %d\n", pOther->GetClassname(), m_iPlayerLaps[pOther->entindex()]);
 	}
 }
 
 void CAR_StartlineEntity::SetPlayerCheckpoint(int iPlayerEntityIndex, int iCheckpoint) {
-	if (iCheckpoint == (m_iPlayerCheckpoint[iPlayerEntityIndex - 1] + 1)) {
-		m_iPlayerCheckpoint[iPlayerEntityIndex - 1] = iCheckpoint;
+	if (iCheckpoint == (m_iPlayerCheckpoint[iPlayerEntityIndex] + 1)) {
+		m_iPlayerCheckpoint[iPlayerEntityIndex] = iCheckpoint;
 		DevMsg("Player %d checkpoint %d\n", iPlayerEntityIndex, iCheckpoint);
 	}
 }
@@ -140,12 +154,11 @@ void CAR_StartlineEntity::StartlineThink()
 				if (m_StopwatchWarmup.GetRemaining() < 1) {
 					Q_snprintf(szText, sizeof(szText), "RACE STARTING");
 				} else {
-					Q_snprintf(szText, sizeof(szText), "WARMUP %d", (int)m_StopwatchWarmup.GetRemaining());
+					Q_snprintf(szText, sizeof(szText), "WARMUP %i", (int)m_StopwatchWarmup.GetRemaining());
 				}
 				UTIL_ClientPrintAll(HUD_PRINTCENTER, szText);
 
 				if (m_StopwatchWarmup.Expired()) {
-					DevMsg("RACE COUNTDOWN STARTING\n");
 					m_StopwatchWarmup.Stop();
 					RestartGame();
 					m_RaceStatus = COUNTDOWN;
@@ -156,6 +169,15 @@ void CAR_StartlineEntity::StartlineThink()
 			}
 			break;
 		case COUNTDOWN:
+			// Check to see if we should play second beep
+			if (m_StopwatchCountdownBeep.IsRunning()) {
+				if (m_StopwatchCountdownBeep.Expired()) {
+					m_StopwatchCountdownBeep.Stop();
+					PlaySound("Racesound.Light1");
+				}
+			}
+
+			// Check to see if we should start race
 			if (m_StopwatchCountdown.IsRunning()) {
 				if (m_StopwatchCountdown.Expired()) {
 					DevMsg("RACE STARTED\n");
@@ -165,12 +187,13 @@ void CAR_StartlineEntity::StartlineThink()
 					SetPlayerLapStarts();
 					m_RaceStatus = RACING;
 				}
-				else {
-					// Check to see if we should play second beep
-					if (m_StopwatchCountdownBeep.Expired()) {
-						m_StopwatchCountdownBeep.Stop();
-						PlaySound("Racesound.Light1");
-					}
+			}
+			break;
+		case FINISH:
+			if (m_StopwatchFinish.IsRunning()) {
+				if (m_StopwatchFinish.Expired()) {
+					m_StopwatchFinish.Stop();
+					HL2MPRules()->GoToIntermission();
 				}
 			}
 			break;
@@ -184,11 +207,12 @@ int CAR_StartlineEntity::GetTotalPlayers()
 	int total = 0;
 
 	// Count players in server
-	for (int i = 1; i <= gpGlobals->maxClients; i++) {
-		CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
-		if (pPlayer) {
-			total++;
-		}
+	for (int i = 1; i <= MAX_PLAYERS; i++) {
+		CBasePlayer *pBasePlayer = UTIL_PlayerByIndex(i);
+		if (pBasePlayer == NULL)
+			continue;
+
+		total++;
 	}
 	
 	return total;
@@ -196,29 +220,36 @@ int CAR_StartlineEntity::GetTotalPlayers()
 
 void CAR_StartlineEntity::RestartGame()
 {
-	RemovePlayersFromVehicles();
+	DevMsg("RemovePlayersFromVehicles\n");
+	RemoveVehicles();
+	DevMsg("CleanUpMap\n");
 	CleanUpMap();
+	DevMsg("RespawnPlayers\n");
 	RespawnPlayers();
 }
 
-void CAR_StartlineEntity::RemovePlayersFromVehicles()
+void CAR_StartlineEntity::RemoveVehicles()
 {
-	for (int i = 0; i < MAX_PLAYERS; i++) {
+	for (int i = 1; i <= MAX_PLAYERS; i++) {
 		CBasePlayer *pBasePlayer = UTIL_PlayerByIndex(i);
 		if (pBasePlayer == NULL)
 			continue;
-
-		CBaseEntity *pVehicle = pBasePlayer->GetVehicleEntity();
-		if (pVehicle == NULL)
-			continue;
 		
+		CBaseEntity *pVehicle = pBasePlayer->GetVehicleEntity();
+
 		pBasePlayer->LeaveVehicle();
+		pBasePlayer->RemoveAllItems(true);
+
+		if (pVehicle) {
+			Warning("Removing vehicle: %i\n", pVehicle->entindex());
+			UTIL_Remove(pVehicle);
+		}
 	}
 }
 
 void CAR_StartlineEntity::RespawnPlayers()
 {
-	for (int i = 0; i < MAX_PLAYERS; i++) {
+	for (int i = 1; i <= MAX_PLAYERS; i++) {
 		CBasePlayer *pBasePlayer = UTIL_PlayerByIndex(i);
 		if (pBasePlayer == NULL)
 			continue;
@@ -227,9 +258,6 @@ void CAR_StartlineEntity::RespawnPlayers()
 		if (pARPlayer == NULL)
 			continue;
 
-		if (pARPlayer->GetActiveWeapon()) {
-			pARPlayer->GetActiveWeapon()->Holster();
-		}
 		pARPlayer->RemoveAllItems(true);
 		pARPlayer->Spawn();
 		pARPlayer->CreateAirboat(true);
@@ -238,7 +266,7 @@ void CAR_StartlineEntity::RespawnPlayers()
 
 void CAR_StartlineEntity::StartAirboatEngines()
 {
-	for (int i = 0; i < MAX_PLAYERS; i++) {
+	for (int i = 1; i <= MAX_PLAYERS; i++) {
 		CBasePlayer *pBasePlayer = UTIL_PlayerByIndex(i);
 		if (pBasePlayer == NULL)
 			continue;
@@ -255,7 +283,7 @@ void CAR_StartlineEntity::StartAirboatEngines()
 	}
 }
 
-void CAR_StartlineEntity::CleanUpMap()
+void CAR_StartlineEntity::CleanUpMap(bool deleteEntities)
 {
 	// Recreate all the map entities from the map data (preserving their indices),
 	// then remove everything else except the players.
@@ -270,24 +298,36 @@ void CAR_StartlineEntity::CleanUpMap()
 		{
 			if (!pWeapon->GetPlayerOwner())
 			{
-				UTIL_Remove(pCur);
+				if (deleteEntities) {
+					UTIL_Remove(pCur);
+				} else {
+					DevMsg("REMOVING WEAPON: %s\n", pCur->GetClassname());
+				}
 			}
 		}
 		// remove entities that has to be restored on roundrestart (breakables etc)
 		else if (!FindInList(s_PreserveEnts, pCur->GetClassname()))
 		{
-			UTIL_Remove(pCur);
+			if (deleteEntities) {
+				UTIL_Remove(pCur);
+			} else {
+				DevMsg("REMOVING: %s\n", pCur->GetClassname());
+			}
 		}
 
 		pCur = gEntList.NextEnt(pCur);
 	}
 
 	// Really remove the entities so we can have access to their slots below.
-	gEntList.CleanupDeleteList();
+	if (deleteEntities) {
+		gEntList.CleanupDeleteList();
+	}
 
 	// Cancel all queued events, in case a func_bomb_target fired some delayed outputs that
 	// could kill respawning CTs
-	g_EventQueue.Clear();
+	if (deleteEntities) {
+		g_EventQueue.Clear();
+	}
 
 	// Now reload the map entities.
 	class CHL2MPMapEntityFilter : public IMapEntityFilter
@@ -347,14 +387,14 @@ void CAR_StartlineEntity::CleanUpMap()
 	CHL2MPMapEntityFilter filter;
 	filter.m_iIterator = g_MapEntityRefs.Head();
 
-	// DO NOT CALL SPAWN ON info_node ENTITIES!
-
-	MapEntity_ParseAllEntities(engine->GetMapEntitiesString(), &filter, true);
+	if (deleteEntities) {
+		MapEntity_ParseAllEntities(engine->GetMapEntitiesString(), &filter, true);
+	}
 }
 
 void CAR_StartlineEntity::PlaySound(const char *soundname)
 {
-	for (int i = 0; i < MAX_PLAYERS; i++) {
+	for (int i = 1; i <= MAX_PLAYERS; i++) {
 		CBasePlayer *pBasePlayer = UTIL_PlayerByIndex(i);
 		if (pBasePlayer == NULL)
 			continue;
@@ -365,16 +405,63 @@ void CAR_StartlineEntity::PlaySound(const char *soundname)
 
 void CAR_StartlineEntity::SetPlayerLapStarts()
 {
-	for (int i = 0; i < MAX_PLAYERS; i++) {
+	for (int i = 1; i <= MAX_PLAYERS; i++) {
 		CBasePlayer *pBasePlayer = UTIL_PlayerByIndex(i);
 		if (pBasePlayer == NULL)
 			continue;
 
-		m_iPlayerLapStart[pBasePlayer->entindex() - 1] = gpGlobals->curtime;
+		m_iPlayerLapStart[pBasePlayer->entindex()] = gpGlobals->curtime;
 	}
 }
 
-void CAR_StartlineEntity::SetLapTime(CBaseEntity *pPlayer, int iLap, float fLapTime)
+void CAR_StartlineEntity::SetLapTime(int iPlayerIndex, int iLap, float fTime)
 {
-	m_iPlayerLapTimes[pPlayer->entindex() - 1][iLap] = fLapTime;
+	m_iPlayerLapTimes[iPlayerIndex][iLap] = fTime;
+}
+
+int CAR_StartlineEntity::GetPlayerLaps(int iPlayerIndex)
+{
+	return m_iPlayerLaps[iPlayerIndex];
+}
+
+void CAR_StartlineEntity::FinishPlayer(CAR_Player *pPlayer)
+{
+	m_bPlayerFinished[pPlayer->entindex()] = true;
+
+	CBaseEntity *pVehicle = pPlayer->GetVehicleEntity();
+	if (pVehicle) {
+		pPlayer->LeaveVehicle();
+		UTIL_Remove(pVehicle);
+	}
+
+	// Move player to spectator mode
+	pPlayer->ChangeTeam(TEAM_SPECTATOR);
+	pPlayer->SetObserverMode(OBS_MODE_ROAMING);
+	pPlayer->ForceObserverMode(OBS_MODE_ROAMING);
+}
+
+int CAR_StartlineEntity::GetTotalFinished()
+{
+	int iFinished = 0;
+	for (int i = 1; i <= MAX_PLAYERS; i++) {
+		if (m_bPlayerFinished[i])
+			iFinished++;
+	}
+
+	return iFinished;
+}
+
+void CAR_StartlineEntity::Reset()
+{
+	m_RaceStatus = WAITING;
+	for (int i = 1; i <= MAX_PLAYERS; i++) {
+		m_bPlayerFinished[i] = false;
+		m_iPlayerCheckpoint[i] = 0;
+		m_iPlayerLaps[i] = 0;
+		m_iPlayerLapStart[i] = NULL;
+
+		for (int a = 0; a < MAX_LAPS; a++) {
+			m_iPlayerLapTimes[i][a] = NULL;
+		}
+	}
 }

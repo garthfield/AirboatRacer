@@ -19,8 +19,6 @@ CHudLaptimes::CHudLaptimes(const char *pElementName) : CHudElement(pElementName)
 	SetParent(pParent);
 	SetVisible(false);
 	SetAlpha(255);
-
-	SetHiddenBits(HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT);
 }
 
 void CHudLaptimes::Init(void) {
@@ -32,6 +30,12 @@ void CHudLaptimes::Clear(void)
 	for (int i = 0; i < MAX_LAPS; i++) {
 		m_fLaptimes[i] = NULL;
 	}
+}
+
+void CHudLaptimes::LevelInit()
+{
+	Clear();
+	SetVisible(false);
 }
 
 void CHudLaptimes::LevelShutdown()
@@ -52,14 +56,7 @@ void CHudLaptimes::MsgFunc_LapTime(bf_read &msg) {
 
 void CHudLaptimes::OnThink()
 {
-	C_BasePlayer *pPlayer = C_BasePlayer::GetLocalPlayer();
-	if (!pPlayer || !pPlayer->IsInAVehicle()) {
-		SetVisible(false);
-		return;
-	}
-
 	SetVisible(true);
-
 	BaseClass::OnThink();
 }
 

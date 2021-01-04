@@ -15,6 +15,7 @@ public:
 	virtual void OnThink();
 	virtual void ApplySchemeSettings(vgui::IScheme *scheme);
 	virtual void MsgFunc_LapTime(bf_read &msg);
+	void LevelInit(void);
 	void LevelShutdown(void);
 
 protected:

@@ -13,6 +13,7 @@
 LINK_ENTITY_TO_CLASS(r_mine_powerup, CAR_MinePowerup);
 
 BEGIN_DATADESC(CAR_MinePowerup)
+	DEFINE_THINKFUNC(MineThink),
 END_DATADESC()
 
 void CAR_MinePowerup::Precache(void)
