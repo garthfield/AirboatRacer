@@ -14,22 +14,22 @@ void CC_ClientList(void) {
 
 	CBasePlayer *pPlayer;
 
-	DevMsg("MAX_PLAYERS METHOD\n");
+	Msg("MAX_PLAYERS METHOD\n");
 	for (int i = 0; i < MAX_PLAYERS; i++) {
 		pPlayer = UTIL_PlayerByIndex(i);
 		if (!pPlayer)
 			continue;
 
-		DevMsg("MAX_PLAYERS: %i player index: %i Userid: %d entindex %d\n", MAX_PLAYERS, i, pPlayer->GetUserID(), pPlayer->entindex());
+		Msg("MAX_PLAYERS: %i player index: %i Userid: %d entindex %d\n", MAX_PLAYERS, i, pPlayer->GetUserID(), pPlayer->entindex());
 	}
 
-	DevMsg("maxClients METHOD\n");
+	Msg("maxClients METHOD\n");
 	for (int i = 1; i <= gpGlobals->maxClients; i++) {
 		pPlayer = UTIL_PlayerByIndex(i);
 		if (!pPlayer)
 			continue;
 
-		DevMsg("maxClients: %i player index: %i Userid: %d entindex %d\n", gpGlobals->maxClients, i, pPlayer->GetUserID(), pPlayer->entindex());
+		Msg("maxClients: %i player index: %i Userid: %d entindex %d\n", gpGlobals->maxClients, i, pPlayer->GetUserID(), pPlayer->entindex());
 	}
 
 }
