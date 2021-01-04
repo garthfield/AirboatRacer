@@ -1,0 +1,8 @@
+"WorldVertexTransition"
+{
+	"$basetexture2" "sourceracer/sourceracerterrasnow"
+	"$basetexture" "sourceracer/sourceracerrock"
+	"%tooltexture" "sourceracer/sourceracersnowrockblend_tool"
+	"%keywords" "wasteland"
+	"$surfaceprop" "concrete"
+}
