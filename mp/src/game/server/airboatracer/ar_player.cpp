@@ -10,6 +10,31 @@
 
 extern CBaseEntity *g_pLastSpawn;
 
+void CC_ClientList(void) {
+
+	CBasePlayer *pPlayer;
+
+	DevMsg("MAX_PLAYERS METHOD\n");
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+		pPlayer = UTIL_PlayerByIndex(i);
+		if (!pPlayer)
+			continue;
+
+		DevMsg("MAX_PLAYERS: %i player index: %i Userid: %d entindex %d\n", MAX_PLAYERS, i, pPlayer->GetUserID(), pPlayer->entindex());
+	}
+
+	DevMsg("maxClients METHOD\n");
+	for (int i = 1; i <= gpGlobals->maxClients; i++) {
+		pPlayer = UTIL_PlayerByIndex(i);
+		if (!pPlayer)
+			continue;
+
+		DevMsg("maxClients: %i player index: %i Userid: %d entindex %d\n", gpGlobals->maxClients, i, pPlayer->GetUserID(), pPlayer->entindex());
+	}
+
+}
+static ConCommand race_clientlist("race_clientlist", CC_ClientList, "List clients.");
+
 LINK_ENTITY_TO_CLASS(player, CAR_Player);
 
 void CAR_Player::Precache(void)
