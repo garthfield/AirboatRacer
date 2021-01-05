@@ -4,7 +4,7 @@
 #include "eventqueue.h"
 #include "hl2mp_gameinterface.h"
 #include "vehicle_base.h"
-#include "sprite.h"
+#include "Sprite.h"
 
 // NOTE: This has to be the last file included!
 #include "tier0/memdbgon.h"
