@@ -8,6 +8,7 @@
 #include "ar_shareddefs.h"
 #include "ar_player.h"
 #include "entitylist.h"
+#include "GameEventListener.h"
 
 enum RaceStatus
 {
@@ -22,13 +23,17 @@ extern ConVar ar_laps;
 extern ConVar ar_minimum_players;
 extern ConVar ar_warmup_time;
 
-class CAR_StartlineEntity : public CTriggerMultiple
+class CAR_StartlineEntity : public CTriggerMultiple, public CGameEventListener
 {
 public:
 	DECLARE_CLASS(CAR_StartlineEntity, CTriggerMultiple);
 
+	CAR_StartlineEntity(void);
+	virtual ~CAR_StartlineEntity();
+
 	virtual void Precache();
-	void Spawn(void);
+	virtual void Spawn(void);
+	virtual void FireGameEvent(IGameEvent *event);
 	void StartlineThink(void);
 	void StartTouch(CBaseEntity *pOther);
 	void SetPlayerCheckpoint(int iPlayerIndex, int iCheckpoint);

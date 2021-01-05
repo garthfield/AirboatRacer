@@ -71,6 +71,15 @@ static const char *s_PreserveEnts[] =
 	"", // END Marker
 };
 
+CAR_StartlineEntity::CAR_StartlineEntity(void)
+{
+	ListenForGameEvent( "player_disconnect" );
+}
+
+CAR_StartlineEntity::~CAR_StartlineEntity()
+{
+}
+
 void CAR_StartlineEntity::Precache(void)
 {
 	BaseClass::Precache();
@@ -491,4 +500,19 @@ void CAR_StartlineEntity::TurnOffLight(const char *name)
 		return;
 
 	pLight->TurnOff();
+}
+
+void CAR_StartlineEntity::FireGameEvent(IGameEvent *event)
+{
+	// Player Disconnect - Remove Airboat & Rankings
+	if (!Q_strncmp(event->GetName(), "player_disconnect", Q_strlen("player_disconnect"))) {
+		DevMsg("PLAYER DISCONNECT\n");
+		CBasePlayer *pPlayer = UTIL_PlayerByUserId(event->GetInt("userid"));
+		if (pPlayer) {
+			CBaseEntity *pVehicle = pPlayer->GetVehicleEntity();
+			if (pVehicle) {
+				pVehicle->Remove();
+			}
+		}
+	}
 }
