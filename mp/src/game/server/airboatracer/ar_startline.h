@@ -7,6 +7,7 @@
 #include "simtimer.h"
 #include "ar_shareddefs.h"
 #include "ar_player.h"
+#include "entitylist.h"
 
 enum RaceStatus
 {
@@ -44,6 +45,8 @@ public:
 	void FinishPlayer(CAR_Player *pPlayer);
 	int GetTotalFinished(void);
 	void Reset(void);
+	void TurnOnLight(const char *name);
+	void TurnOffLight(const char *name);
 
 private:
 	int m_iPlayerCheckpoint[MAX_PLAYERS + 1];           // Stores each player's current checkpoint

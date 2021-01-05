@@ -4,6 +4,7 @@
 #include "eventqueue.h"
 #include "hl2mp_gameinterface.h"
 #include "vehicle_base.h"
+#include "sprite.h"
 
 // NOTE: This has to be the last file included!
 #include "tier0/memdbgon.h"
@@ -33,6 +34,7 @@ static const char *s_PreserveEnts[] =
 	"env_soundscape_proxy",
 	"env_soundscape_triggerable",
 	"env_sun",
+	"env_sprite",
 	"env_wind",
 	"env_fog_controller",
 	"func_brush",
@@ -159,6 +161,7 @@ void CAR_StartlineEntity::StartlineThink()
 				UTIL_ClientPrintAll(HUD_PRINTCENTER, szText);
 
 				if (m_StopwatchWarmup.Expired()) {
+					TurnOnLight("red");
 					m_StopwatchWarmup.Stop();
 					RestartGame();
 					m_RaceStatus = COUNTDOWN;
@@ -172,6 +175,9 @@ void CAR_StartlineEntity::StartlineThink()
 			// Check to see if we should play second beep
 			if (m_StopwatchCountdownBeep.IsRunning()) {
 				if (m_StopwatchCountdownBeep.Expired()) {
+					TurnOnLight("yellow1");
+					TurnOnLight("yellow2");
+					TurnOffLight("red");
 					m_StopwatchCountdownBeep.Stop();
 					PlaySound("Racesound.Light1");
 				}
@@ -180,6 +186,9 @@ void CAR_StartlineEntity::StartlineThink()
 			// Check to see if we should start race
 			if (m_StopwatchCountdown.IsRunning()) {
 				if (m_StopwatchCountdown.Expired()) {
+					TurnOnLight("green");
+					TurnOffLight("yellow1");
+					TurnOffLight("yellow2");
 					DevMsg("RACE STARTED\n");
 					m_StopwatchCountdown.Stop();
 					PlaySound("Racesound.Light2");
@@ -464,4 +473,22 @@ void CAR_StartlineEntity::Reset()
 			m_iPlayerLapTimes[i][a] = NULL;
 		}
 	}
+}
+
+void CAR_StartlineEntity::TurnOnLight(const char *name)
+{
+	CSprite *pLight = (CSprite*)gEntList.FindEntityByName(NULL, name);
+	if (pLight == NULL)
+		return;
+	
+	pLight->TurnOn();
+}
+
+void CAR_StartlineEntity::TurnOffLight(const char *name)
+{
+	CSprite *pLight = (CSprite*)gEntList.FindEntityByName(NULL, name);
+	if (pLight == NULL)
+		return;
+
+	pLight->TurnOff();
 }
